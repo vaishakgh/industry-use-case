@@ -6,7 +6,7 @@ This workspace documents and executes a **greenfield build of a Claims Managemen
 
 The system lets customers report a claim through voice, email, or chat, with an AI intake agent extracting structured data and preserving conversation context across channels. Uploaded damage photos are analyzed automatically to estimate severity and repair cost, enabling straight-through processing for low-risk claims while routing complex or high-value claims to human adjusters. Claims move through a defined lifecycle — intake, assessment, fraud screening, and payout or dispute — orchestrated as a state machine with retry and escalation handling. Every automated decision is logged, with its inputs and confidence score, to an append-only audit trail before it is allowed to take effect.
 
-**Scope:** 12 requirements · 43 correctness properties · 5 subsystems · 7 backend packages · 97 implementation/test sub-tasks
+**Scope:** 12 requirements · 43 correctness properties · 5 subsystems · 7 backend packages · 108 implementation/test sub-tasks · 1 frontend package (planned)
 
 **Target stack:** Bedrock AgentCore, Amazon Transcribe, Amazon Rekognition, AWS Step Functions, Lambda, DynamoDB, S3, Amplify, Cognito — implemented as TypeScript/Node.js Lambda services in an npm-workspaces monorepo.
 
@@ -69,13 +69,13 @@ flowchart TB
     AuditLambda --> AuditTable[(DynamoDB\nAudit Log, append-only)]
 
     subgraph Portal["Customer Portal"]
-        Amplify["Amplify Web App"]
+        AmplifyFrontend["Amplify Frontend\n(React SPA)"]
         Cognito["Amazon Cognito\nUser Pool"]
         PortalAPI["API Gateway + Lambda"]
     end
 
-    Amplify --> Cognito
-    Amplify --> PortalAPI
+    AmplifyFrontend --> Cognito
+    AmplifyFrontend --> PortalAPI
     PortalAPI --> ClaimsTable
     PortalAPI --> S3Docs
     PortalAPI --> AuditTable
@@ -104,11 +104,11 @@ flowchart TB
 | **Damage Assessment Service** | [`backend/services/damage-assessment/`](./backend/services/damage-assessment/) | Amazon Rekognition-based photo analysis — severity rating, estimated repair cost, confidence score |
 | **Fraud Detection Service** | [`backend/services/fraud-detection/`](./backend/services/fraud-detection/) | Claim frequency, timeline consistency, and sanctions/watchlist screening; fraud flag aggregation |
 | **Claims Orchestrator** | [`backend/services/orchestrator/`](./backend/services/orchestrator/) | AWS Step Functions state machine driving the claim lifecycle (Intake → Assessment → Fraud_Check → Payout/Disputed) with retry/backoff and escalation |
-| **Customer Portal** | [`backend/services/portal/`](./backend/services/portal/) | Amplify + Cognito self-service web application — status tracking, document upload, dispute submission |
+| **Customer Portal** | [`backend/services/portal/`](./backend/services/portal/) | Amplify + Cognito self-service web application — status tracking, document upload, dispute submission; frontend (React SPA) scaffolding planned in tasks.md section 18 |
 
 Two cross-cutting packages support all five: [`backend/services/audit-log/`](./backend/services/audit-log/) (append-only decision audit trail, written *before* any automated decision takes effect) and [`backend/services/shared/`](./backend/services/shared/) (domain types, configuration loader, shared upload validator).
 
-All claim state lives in **DynamoDB**; all binary evidence (photos, documents) lives in **S3**. The [`frontend/`](./frontend/) Amplify web app has not been started yet — only the portal's backend API/auth logic exists so far.
+All claim state lives in **DynamoDB**; all binary evidence (photos, documents) lives in **S3**. The [`frontend/`](./frontend/) Amplify web app has not been built yet, but its implementation is now planned as [`spec/tasks.md`](./spec/tasks.md) section 18 (Amplify React SPA: login, claims dashboard, claim detail/status, document upload, dispute submission).
 
 ---
 
@@ -172,12 +172,12 @@ sequenceDiagram
 |---|---|
 | 1 — Requirements | ✅ Complete (12 requirements, EARS format, detailed via parallel requirement review) |
 | 2 — Design | ✅ Complete (architecture, data models, state machines, 43 correctness properties) |
-| 3 — Tasks | ✅ Complete (97 sub-tasks, dependency graph) |
+| 3 — Tasks | ✅ Complete (108 sub-tasks, dependency graph) |
 | 4 — Implementation | 🔄 In progress |
 
 **Task plan:** [`spec/tasks.md`](./spec/tasks.md) · **Design:** [`spec/design.md`](./spec/design.md) · **Requirements:** [`spec/requirements.md`](./spec/requirements.md)
 
-**~25% of implementation sub-tasks complete (24 of 97).**
+**~31% of implementation sub-tasks complete (33 of 108).**
 
 | # | Section | Sub-tasks Done | Status |
 |---|---|---|---|
@@ -186,18 +186,20 @@ sequenceDiagram
 | 3 | Claims and Claim_Session data access layer | 5 / 5 | ✅ Done |
 | — | Checkpoint 4 — all tests pass | — | ✅ Done |
 | 5 | Shared evidence upload validation | 2 / 2 | ✅ Done |
-| 6 | FNOL Intake Agent — channel normalization and session continuity | 1 / 12 | 🔄 In progress |
+| 6 | FNOL Intake Agent — channel normalization and session continuity | 10 / 12 | 🔄 In progress |
 | 7 | FNOL Intake Agent — structured field extraction and clarification | 0 / 11 | ⬜ Not started |
 | — | Checkpoint 8 — all tests pass | — | ⬜ Not started |
 | 9 | Damage Assessment Service | 0 / 7 | ⬜ Not started |
 | 10 | Fraud Detection Service | 2 / 10 | 🔄 In progress |
 | — | Checkpoint 11 — all tests pass | — | ⬜ Not started |
-| 12 | Claims Orchestrator lifecycle and approval logic | 0 / 15 | ⬜ Not started |
+| 12 | Claims Orchestrator lifecycle and approval logic | 0 / 14 | ⬜ Not started |
 | — | Checkpoint 13 — all tests pass | — | ⬜ Not started |
 | 14 | Dispute Resolution workflow | 0 / 9 | ⬜ Not started |
 | 15 | Customer Portal authentication and session management | 1 / 6 | 🔄 In progress |
 | 16 | Customer Portal claim access, document upload, and PII authorization | 0 / 7 | ⬜ Not started |
 | — | Checkpoint 17 — final, all tests pass | — | ⬜ Not started |
+| 18 | Customer Portal frontend (Amplify SPA) | 0 / 12 | ⬜ Not started |
+| — | Checkpoint 19 — final frontend, all tests pass | — | ⬜ Not started |
 
 Build, lint, and the full test suite are passing as of the last verified run (32+ suites, 165+ tests — re-verify with `npm test` for the current count).
 
@@ -238,7 +240,7 @@ Formalized **43 correctness properties** for property-based testing, each tagged
 
 ### 🗂️ Tasks Workflow
 
-Broke the design into 97 implementation/test sub-tasks across 17 top-level groups (foundations, Audit Log Service, Claims/ClaimSession data layer, shared upload validation, Intake Agent ×2, Damage Assessment, Fraud Detection, Claims Orchestrator, Dispute Resolution, Customer Portal ×2), with 5 checkpoints and all 43 property tests wired in as optional test sub-tasks directly after their implementation task. Generated a 26-wave task dependency graph reflecting cross-package build order.
+Broke the design into 108 implementation/test sub-tasks across 19 top-level groups (foundations, Audit Log Service, Claims/ClaimSession data layer, shared upload validation, Intake Agent ×2, Damage Assessment, Fraud Detection, Claims Orchestrator, Dispute Resolution, Customer Portal ×3), with 5 checkpoints and all 43 property tests wired in as optional test sub-tasks directly after their implementation task. Generated a 26-wave task dependency graph reflecting cross-package build order. A Customer Portal frontend section (18: Amplify SPA — login, dashboard, claim detail, document upload, dispute form) was added afterward once the user asked about frontend scope, tied to design.md's expanded Customer Portal frontend architecture, extending the plan to 29 waves.
 
 **Artifacts:** [`spec/tasks.md`](./spec/tasks.md)
 
