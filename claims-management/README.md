@@ -14,6 +14,90 @@ The system lets customers report a claim through voice, email, or chat, with an 
 
 ## 2. Architecture: Five Cooperating Subsystems
 
+### System Context Diagram
+
+The diagram below shows how the three intake channels, the five subsystems, evidence storage, the audit trail, and the human review roles all connect, as defined in the design document.
+
+```mermaid
+flowchart TB
+    subgraph Channels["Intake Channels"]
+        Voice["Voice (Amazon Connect)"]
+        Email["Email (SES)"]
+        Chat["Chat (Amplify Web/Chat Widget)"]
+    end
+
+    Transcribe["Amazon Transcribe"]
+
+    subgraph Agent["FNOL Intake Agent"]
+        AgentCoreRuntime["Bedrock AgentCore Runtime\n(claims intake agent)"]
+        AgentCoreMemory["Bedrock AgentCore Memory\n(Claim_Session context)"]
+    end
+
+    Voice --> Transcribe --> AgentCoreRuntime
+    Email --> AgentCoreRuntime
+    Chat --> AgentCoreRuntime
+    AgentCoreRuntime <--> AgentCoreMemory
+
+    AgentCoreRuntime -->|create/update Claim| ClaimsTable[(DynamoDB\nClaims Table)]
+    AgentCoreRuntime -->|SendTaskSuccess/Failure| Orchestrator
+
+    subgraph Evidence["Evidence Handling"]
+        S3Photos[(S3: damage-photos)]
+        S3Docs[(S3: claim-documents)]
+        Rekognition["Amazon Rekognition"]
+        DamageLambda["Damage Assessment\nLambda"]
+    end
+
+    S3Photos --> DamageLambda --> Rekognition
+    DamageLambda -->|SendTaskSuccess/Failure| Orchestrator
+    DamageLambda --> ClaimsTable
+
+    Orchestrator["AWS Step Functions\nClaims Orchestrator"]
+    FraudLambda["Fraud Detection\nLambda"]
+    PayoutLambda["Payout Lambda"]
+    AdjusterQueue[(DynamoDB\nReview Queue)]
+
+    Orchestrator --> FraudLambda --> ClaimsTable
+    Orchestrator --> PayoutLambda --> ClaimsTable
+    Orchestrator --> AdjusterQueue
+    Orchestrator --> AuditLambda["Audit Log Lambda"]
+    FraudLambda --> AuditLambda
+    DamageLambda --> AuditLambda
+    PayoutLambda --> AuditLambda
+    AgentCoreRuntime --> AuditLambda
+
+    AuditLambda --> AuditTable[(DynamoDB\nAudit Log, append-only)]
+
+    subgraph Portal["Customer Portal"]
+        Amplify["Amplify Web App"]
+        Cognito["Amazon Cognito\nUser Pool"]
+        PortalAPI["API Gateway + Lambda"]
+    end
+
+    Amplify --> Cognito
+    Amplify --> PortalAPI
+    PortalAPI --> ClaimsTable
+    PortalAPI --> S3Docs
+    PortalAPI --> AuditTable
+    PortalAPI -->|submit dispute| Orchestrator
+
+    HumanAdjuster["Human Adjuster"]
+    FraudAnalyst["Fraud Analyst"]
+    ComplianceOfficer["Compliance Officer"]
+
+    HumanAdjuster -->|review, decide| AdjusterQueue
+    FraudAnalyst -->|review, decide| AdjusterQueue
+    ComplianceOfficer -->|query| AuditTable
+
+    KMS["AWS KMS\n(CMKs per data class)"]
+    KMS -.encrypts.- ClaimsTable
+    KMS -.encrypts.- AuditTable
+    KMS -.encrypts.- S3Photos
+    KMS -.encrypts.- S3Docs
+```
+
+---
+
 | Subsystem | Package | Responsibility |
 |---|---|---|
 | **FNOL Intake Agent** | [`backend/services/intake-agent/`](./backend/services/intake-agent/) | Bedrock AgentCore agent — voice/email/chat intake, structured field extraction with confidence scoring, cross-channel session continuity |
