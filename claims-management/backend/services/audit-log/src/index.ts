@@ -18,3 +18,5 @@ export * from './repository/auditLogRepository';
 export * from './recordAutomatedDecision';
 
 export * from './recordDecisionBeforeEffect';
+
+export * from './handlers/getAuditHistoryHandler';

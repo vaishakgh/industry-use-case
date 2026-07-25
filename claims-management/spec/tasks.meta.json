@@ -11,6 +11,22 @@
     "3.5 Write property test for unique claim creation": {
       "status": "passed",
       "lastRunTimestamp": 1785003378038
+    },
+    "2.3 Write property test for audit record completeness": {
+      "status": "passed",
+      "lastRunTimestamp": 1785005698566
+    },
+    "2.5 Write property test for audit-write-precedes-effect": {
+      "status": "passed",
+      "lastRunTimestamp": 1785005825711
+    },
+    "2.8 Write property test for audit history access restriction": {
+      "status": "passed",
+      "lastRunTimestamp": 1785006356006
+    },
+    "2.7 Write property test for chronological per-claim audit retrieval": {
+      "status": "passed",
+      "lastRunTimestamp": 1785006461162
     }
   },
   "executionHistory": {

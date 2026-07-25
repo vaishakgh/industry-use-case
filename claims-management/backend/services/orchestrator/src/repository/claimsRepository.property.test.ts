@@ -12,7 +12,9 @@ import { DynamoDbClaimsRepository } from './claimsRepository';
  */
 const transitionArb = fc.record({
   status: fc.constantFrom(...CLAIM_STATUS_VALUES),
-  timestamp: fc.date({ min: new Date(0), max: new Date(4102444800000) }).map((d) => d.toISOString()),
+  timestamp: fc
+    .date({ min: new Date(0), max: new Date(4102444800000), noInvalidDate: true })
+    .map((d) => d.toISOString()),
 });
 
 describe('DynamoDbClaimsRepository.appendStatusHistory property tests', () => {

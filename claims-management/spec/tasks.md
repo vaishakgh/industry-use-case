@@ -20,11 +20,11 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
     - Load `transcriptionConfidenceThreshold`, `fieldConfidenceThreshold`, `maxClarifyingAttempts`, `maxVoiceRetries`, `maxConfirmAttempts`, `maxPhotosPerClaim`, `supportedImageFormats`, `maxPhotoFileSizeBytes`, `maxPhotoResubmissions`, `damageAssessmentConfidenceThreshold`, `autoApprovalThreshold`, `fraudFrequencyThreshold`/`fraudFrequencyWindow`, `stageRetryMaxAttempts`, `stageRetryBackoffSeconds`, `auditRetentionPeriod`, `sessionTimeoutMinutes`, `maxDisputeReasonLength`, `supportedDocumentFormats`, `maxDocumentFileSizeBytes`
     - _Requirements: 1.5, 1.6, 2.3, 2.4, 4.1, 4.4, 4.5, 4.6, 6.1, 7.2, 9.6, 10.2, 11.5_
 
-  - [ ]* 1.4 Write unit tests for configuration loader
+  - [x]* 1.4 Write unit tests for configuration loader
     - Test default values and configured-range validation (e.g., `sessionTimeoutMinutes` within 5-30)
     - _Requirements: 9.6_
 
-- [ ] 2. Implement Audit Log Service
+- [x] 2. Implement Audit Log Service
   - [x] 2.1 Implement AuditLog DynamoDB access layer
     - Implement append-only `PutItem` with `ConditionExpression: attribute_not_exists(LogId)` and a `ClaimIdIndex` GSI query helper
     - _Requirements: 8.2, 8.4_
@@ -33,7 +33,7 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
     - Accept decision type, inputs, confidence score, claim id, timestamp, and optional fraud indicators/actor fields, and persist via the access layer from 2.1
     - _Requirements: 8.1, 8.3_
 
-  - [ ]* 2.3 Write property test for audit record completeness
+  - [x]* 2.3 Write property test for audit record completeness
     - **Property 30: Automated decision audit completeness**
     - **Validates: Requirements 8.1, 8.3**
 
@@ -41,23 +41,23 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
     - Implement a helper that decision-producing components call: it invokes `recordAutomatedDecision` synchronously and only returns success (allowing the caller to apply its side effect) if the write succeeds; on failure it raises `Claims.AuditFailure`
     - _Requirements: 8.6_
 
-  - [ ]* 2.5 Write property test for audit-write-precedes-effect
+  - [x]* 2.5 Write property test for audit-write-precedes-effect
     - **Property 33: Audit write precedes decision effect**
     - **Validates: Requirements 8.6**
 
-  - [ ] 2.6 Implement `GET /audit/claims/{claimId}` query handler
+  - [x] 2.6 Implement `GET /audit/claims/{claimId}` query handler
     - Query the `ClaimIdIndex` GSI in chronological order and gate access on a compliance-officer group claim from the Lambda authorizer, returning 403 for unauthorized requesters
     - _Requirements: 8.4, 8.5_
 
-  - [ ]* 2.7 Write property test for chronological per-claim audit retrieval
+  - [x]* 2.7 Write property test for chronological per-claim audit retrieval
     - **Property 31: Chronological per-claim audit retrieval**
     - **Validates: Requirements 8.4**
 
-  - [ ]* 2.8 Write property test for audit history access restriction
+  - [x]* 2.8 Write property test for audit history access restriction
     - **Property 32: Audit history access restricted to compliance officers**
     - **Validates: Requirements 8.5**
 
-  - [ ]* 2.9 Write unit tests for audit write failure classification
+  - [x]* 2.9 Write unit tests for audit write failure classification
     - Cover a genuine `PutItem` failure vs. a duplicate-`logId` conditional-check failure, confirming only genuine failures raise `Claims.AuditFailure`
     - _Requirements: 8.6_
 
@@ -82,7 +82,7 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
     - **Property 1: Unique claim creation on new session**
     - **Validates: Requirements 1.4**
 
-- [ ] 4. Checkpoint - Ensure all tests pass
+- [x] 4. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 5. Implement shared evidence upload validation
