@@ -28,7 +28,7 @@ The Claims Management and First Notice of Loss (FNOL) system enables insurance c
 - **Audit_Log_Service**: The service responsible for recording every automated decision, its inputs, and its confidence score.
 - **Automated_Decision**: A system-generated determination on a Claim, including approval, denial, or fraud flag, produced without direct human action.
 - **Confidence_Score**: A numeric value between 0 and 1 indicating the certainty of an Automated_Decision or extracted field.
-- **Customer_Portal**: The self-service web application (built with Amplify) through which customers check Claim status and upload documents.
+- **Customer_Portal**: The self-service web application (built with Amplify) through which customers check Claim status and upload documents. The Customer_Portal comprises two parts: a browser-based frontend (an Amplify-hosted single-page application) that customers interact with directly, and backend APIs (authentication via Cognito, claim access, document upload, and dispute submission) that the frontend calls.
 - **Customer**: An authenticated policyholder interacting with the Customer_Portal or an intake channel.
 - **Dispute**: A customer-initiated contest of a Claim decision, routed to a Human_Adjuster queue for resolution.
 - **Claim_Status**: The current lifecycle stage of a Claim, one of: Intake, Assessment, Fraud_Check, Pending_Adjuster_Review, Approved, Denied, Paid, Disputed, Resolved.

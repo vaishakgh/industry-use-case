@@ -94,44 +94,44 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
     - **Property 17: Upload validation rejects unsupported or oversized files**
     - **Validates: Requirements 4.4, 4.5, 10.2, 10.3**
 
-- [ ] 6. Implement FNOL Intake Agent - channel normalization and session continuity
+- [x] 6. Implement FNOL Intake Agent - channel normalization and session continuity
   - [x] 6.1 Implement `ChannelMessage` normalization for Voice/Email/Chat adapters
     - Normalize all three channels into `{channel, rawText, claimIdHint?, policyNumberHint?, timestamp}` before invoking agent logic
     - _Requirements: 1.1, 1.2, 1.3_
 
-  - [ ] 6.2 Implement Voice adapter with confidence-based confirmation and retry counter
+  - [x] 6.2 Implement Voice adapter with confidence-based confirmation and retry counter
     - Integrate Amazon Transcribe segment confidence scores; prompt for confirm/restate below `transcriptionConfidenceThreshold`; track `voiceRetryCount` for unintelligible audio
     - _Requirements: 1.1, 1.5, 1.6_
 
-  - [ ] 6.5 Implement Email/Chat adapters with unparseable-content handling
+  - [x] 6.5 Implement Email/Chat adapters with unparseable-content handling
     - Detect when no claim-relevant content can be extracted and respond by asking the customer to resubmit or clarify, without creating/advancing a Claim
     - _Requirements: 1.2, 1.3, 1.7_
 
-  - [ ] 6.7 Implement `lookupClaimSession` tool
+  - [x] 6.7 Implement `lookupClaimSession` tool
     - Query by `Claim_ID` or policy number against the `ClaimSessions` GSI, returning zero, one, or many matches with `Claim_Status = Intake`
     - _Requirements: 3.1, 3.4, 3.5_
 
-  - [ ]* 6.3 Write property test for low-confidence transcription confirmation
+  - [x]* 6.3 Write property test for low-confidence transcription confirmation
     - **Property 2: Low-confidence transcription triggers confirmation**
     - **Validates: Requirements 1.5**
 
-  - [ ]* 6.4 Write property test for voice retry exhaustion
+  - [x]* 6.4 Write property test for voice retry exhaustion
     - **Property 3: Voice retry exhaustion offers a channel switch**
     - **Validates: Requirements 1.6**
 
-  - [ ]* 6.6 Write property test for unparseable content handling
+  - [x]* 6.6 Write property test for unparseable content handling
     - **Property 4: Unparseable content requests resubmission**
     - **Validates: Requirements 1.7**
 
-  - [ ]* 6.8 Write property test for unknown claim reference
+  - [x]* 6.8 Write property test for unknown claim reference
     - **Property 13: Unknown claim reference yields a not-found response**
     - **Validates: Requirements 3.4**
 
-  - [ ]* 6.9 Write property test for ambiguous policy number disambiguation
+  - [x]* 6.9 Write property test for ambiguous policy number disambiguation
     - **Property 14: Ambiguous policy number match triggers disambiguation**
     - **Validates: Requirements 3.5**
 
-  - [ ] 6.10 Implement session resume logic
+  - [x] 6.10 Implement session resume logic
     - Retrieve previously captured `Structured_Claim_Fields` on resume and suppress re-requesting fields already marked confirmed
     - _Requirements: 3.1, 3.2, 3.3_
 
@@ -418,12 +418,65 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
 - [ ] 17. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
+- [ ] 18. Implement Customer Portal frontend (Amplify SPA)
+  - [ ] 18.1 Initialize Amplify frontend project scaffold
+    - Bootstrap a React SPA via the Amplify CLI/Gen 2 project scaffold; configure the Amplify Auth library against the existing Cognito User Pool and the Amplify API library against the existing Portal API; configure Amplify Storage for S3 document/photo uploads
+    - _Requirements: 9.1 (foundational, supports all frontend requirements)_
+
+  - [ ] 18.2 Implement Login/Authentication screen
+    - Build a username + password form; on failure, display the generic invalid-credential error message returned by the backend (Property 34) without indicating which field was wrong; on session idle-timeout, present a re-authentication prompt without discarding the customer's in-progress view state
+    - _Requirements: 9.1, 9.2, 9.6_
+
+  - [ ] 18.3 Implement Claims List/Dashboard view
+    - Fetch and render the list of claims scoped to the authenticated customer via the existing Portal API, as the landing view after login
+    - _Requirements: 9.4_
+
+  - [ ] 18.4 Implement Claim Detail/Status view
+    - Fetch a claim via `GET /claims/{id}` and render its current `Claim_Status` together with the full `statusHistory` as a timeline
+    - _Requirements: 10.1_
+
+  - [ ] 18.5 Implement Document Upload component
+    - Build a file picker with client-side format/size pre-validation mirroring the shared upload validator (5.1/Property 17), upload progress indication, and an explicit success/failure confirmation; submit via `POST /claims/{id}/documents`
+    - _Requirements: 10.2, 10.3, 10.4_
+
+  - [ ] 18.6 Implement Dispute Submission form
+    - Render the form only when the displayed claim's status is `Approved` or `Denied`; include a reason field with client-side max-length validation mirroring the configured `maxDisputeReasonLength`; submit via `POST /claims/{id}/disputes`
+    - _Requirements: 11.1, 11.4, 11.5_
+
+  - [ ] 18.7 Configure Amplify Hosting deployment
+    - Configure Amplify Hosting with git-branch-based CI/CD to build and deploy the frontend on push to the configured branch
+    - _Requirements: (foundational, deployment)_
+
+  - [ ]* 18.8 Write unit tests for the Login/Authentication screen
+    - Test that the invalid-credential error message is identical regardless of which field was wrong, and that idle-timeout triggers a re-authentication prompt while preserving in-progress view state
+    - _Requirements: 9.2, 9.6_
+
+  - [ ]* 18.9 Write unit tests for the Claims List/Dashboard view
+    - Test that only claims returned by the Portal API for the authenticated customer are rendered
+    - _Requirements: 9.4_
+
+  - [ ]* 18.10 Write unit tests for the Claim Detail/Status view
+    - Test that the rendered view reflects the claim's current status and full `statusHistory` returned by `GET /claims/{id}`
+    - _Requirements: 10.1_
+
+  - [ ]* 18.11 Write unit tests for the Document Upload component
+    - Test client-side rejection of unsupported formats/oversized files before any upload call, and rendering of the success/failure confirmation based on the API response
+    - _Requirements: 10.2, 10.3, 10.4_
+
+  - [ ]* 18.12 Write unit tests for the Dispute Submission form
+    - Test that the form is hidden for claims not in `Approved`/`Denied` status, and that client-side max-length validation rejects an over-length reason before submission
+    - _Requirements: 11.1, 11.4, 11.5_
+
+- [ ] 19. Final frontend checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
 ## Notes
 
 - Tasks marked with `*` are optional (test-focused) and can be skipped for a faster MVP; core implementation tasks are never marked optional.
 - Every property test references its exact design document property number and title, and must be tagged `// Feature: claims-management-fnol, Property N: <title>` per the design's Testing Strategy.
 - Infrastructure/wiring concerns called out in the design (Transcribe/Rekognition/watchlist API wiring, KMS/TLS configuration, Cognito authorizer presence, audit-table IAM immutability) are validated by integration/smoke tests, not property tests, and are not broken out as separate tasks here since they are not coding-agent-executable end-to-end (they require a deployed environment).
 - All Rekognition and watchlist-screening property tests (9.4, 10.2, 10.4, 10.7) inject a mocked client at the component boundary so they exercise only the aggregation/decision logic, per the design's mocking-boundary guidance.
+- Section 18 (Customer Portal frontend) has no property-based test tasks: the design explicitly classifies UI-level screen composition and client-side validation mirroring as out-of-scope for property-based testing, so 18.8-18.12 are plain unit/component tests instead.
 
 ## Task Dependency Graph
 
@@ -455,7 +508,12 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
     { "id": 22, "tasks": ["14.2", "14.3", "14.4", "15.2", "15.4", "15.6", "16.2", "16.5"] },
     { "id": 23, "tasks": ["14.5", "14.6", "16.3", "16.6"] },
     { "id": 24, "tasks": ["14.7", "14.8", "16.4", "16.7"] },
-    { "id": 25, "tasks": ["14.9"] }
+    { "id": 25, "tasks": ["14.9"] },
+    { "id": 26, "tasks": ["18.1"] },
+    { "id": 27, "tasks": ["18.2", "18.3", "18.4", "18.5", "18.6", "18.7"] },
+    { "id": 28, "tasks": ["18.8", "18.9", "18.10", "18.11", "18.12"] }
   ]
 }
 ```
+<!-- Wave 26-28 assumption: 18.1 (scaffold) has no hard dependency on backend tasks and could technically run in parallel with earlier waves, but is scheduled after wave 25 for simplicity since it is a pure addition to the graph. Waves 27's screens depend on their respective backend endpoints/predicates (15.1 and 15.5 for 18.2; 16.1 for 18.3; 16.3 for 18.4; 5.1 and 16.5 for 18.5; 14.1 for 18.6), all of which complete in waves <= 22, so placing them in wave 27 (after 18.1) satisfies those dependencies without needing earlier renumbering. -->
+

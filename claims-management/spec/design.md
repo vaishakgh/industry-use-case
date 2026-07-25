@@ -76,13 +76,13 @@ flowchart TB
     AuditLambda --> AuditTable[(DynamoDB\nAudit Log, append-only)]
 
     subgraph Portal["Customer Portal"]
-        Amplify["Amplify Web App"]
+        AmplifyFrontend["Amplify Frontend\n(React SPA)"]
         Cognito["Amazon Cognito\nUser Pool"]
         PortalAPI["API Gateway + Lambda"]
     end
 
-    Amplify --> Cognito
-    Amplify --> PortalAPI
+    AmplifyFrontend --> Cognito
+    AmplifyFrontend --> PortalAPI
     PortalAPI --> ClaimsTable
     PortalAPI --> S3Docs
     PortalAPI --> AuditTable
@@ -234,7 +234,16 @@ stateDiagram-v2
 
 ### 7. Customer Portal
 
-- **Frontend**: Amplify-hosted SPA, using the Amplify Auth library against a Cognito User Pool (Req 9.1).
+- **Frontend**: An Amplify-hosted single-page application, using **React** (Amplify's default/most common frontend framework) as the chosen UI framework, bootstrapped via the Amplify CLI/Gen 2 project scaffold. The app uses the Amplify Auth library against the Cognito User Pool for authentication, and the Amplify API/Storage libraries for calling the Portal API (API Gateway) and for S3 document/photo uploads (Req 9.1).
+  - **Key screens/views**:
+    - **Login/Authentication screen**: username + password form; on failure, displays the generic invalid-credential error message returned by the backend without distinguishing which field was wrong (Req 9.2); on session expiry, presents a re-authentication prompt in place of (not instead of preserving) the customer's in-progress view state (Req 9.6).
+    - **Claims List/Dashboard view**: lists the claims scoped to the authenticated customer (i.e., only claims the Portal API returns for that `sub`), as the landing view after login.
+    - **Claim Detail/Status view**: shows the claim's current `Claim_Status` plus its full `statusHistory` as a timeline, sourced from `GET /claims/{id}` (Req 10.1).
+    - **Document Upload component**: a file picker that performs client-side format/size pre-validation mirroring the backend validator (Property 17) before submitting, shows upload progress, and displays an explicit success or failure confirmation once `POST /claims/{id}/documents` responds (Req 10.2, 10.3, 10.4).
+    - **Dispute Submission form**: rendered only when the displayed claim's status is `Approved` or `Denied`; contains a reason text field with client-side length validation mirroring the configured `maxDisputeReasonLength` before submitting to `POST /claims/{id}/disputes` (Req 11.1, 11.4, 11.5).
+  - **State/data-fetching**: All screens read/write claim data exclusively through the existing Portal API endpoints described below (`GET /claims/{id}`, `POST /claims/{id}/documents`, `POST /claims/{id}/disputes`), authenticated by attaching the Amplify Auth session token (Cognito ID/access token) to each request; no claim data is fetched or cached outside of these calls.
+  - **Deployment**: Amplify Hosting, using Amplify's standard git-branch-based CI/CD (build and deploy on push to the configured branch).
+  - Frontend behavior above is UI-level (screen composition, client-side pre-validation mirroring, session-timeout prompting) and is out-of-scope for property-based testing per this design's PBT-applicability classification (see Correctness Properties); it is covered by unit/example-based and snapshot-style tests instead.
 - **Auth**: Cognito User Pool with:
   - Password policy and standard Cognito advanced security features.
   - Account lockout: Cognito's built-in adaptive authentication is supplemented by a Lambda `PreAuthentication` trigger that tracks consecutive failed attempts per user in DynamoDB (`FailedLoginAttempts` table, TTL-based 15-minute window) and denies auth attempts once 5 consecutive failures occur within 15 minutes, until the 15-minute lockout expires (Req 9.3).
