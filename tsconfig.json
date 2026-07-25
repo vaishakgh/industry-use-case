@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "backend/services/shared" },
+    { "path": "backend/services/intake-agent" },
+    { "path": "backend/services/damage-assessment" },
+    { "path": "backend/services/fraud-detection" },
+    { "path": "backend/services/orchestrator" },
+    { "path": "backend/services/audit-log" },
+    { "path": "backend/services/portal" }
+  ]
+}

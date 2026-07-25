@@ -1,0 +1,689 @@
+{
+  "pbtResults": {
+    "5.2 Write property test for upload validation": {
+      "status": "passed",
+      "lastRunTimestamp": 1785003243356
+    },
+    "3.2 Write property test for status transition history invariant": {
+      "status": "passed",
+      "lastRunTimestamp": 1785003369959
+    },
+    "3.5 Write property test for unique claim creation": {
+      "status": "passed",
+      "lastRunTimestamp": 1785003378038
+    }
+  },
+  "executionHistory": {
+    "1.1 Initialize project structure and TypeScript/Lambda build configuration": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000770706
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000790786
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001282749
+      }
+    ],
+    "1.2 Define shared domain types and enums": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000771534
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001288661
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001655542
+      }
+    ],
+    "1.3 Implement configuration loader for SystemConfig values": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000771750
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001289010
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001655925
+      }
+    ],
+    "2.1 Implement AuditLog DynamoDB access layer": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000772383
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001663345
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002449835
+      }
+    ],
+    "2.2 Implement `recordAutomatedDecision` Lambda handler": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000772565
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002483951
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002944346
+      }
+    ],
+    "2.4 Implement audit-write-precedes-effect wrapper": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000772722
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003139147
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003396792
+      }
+    ],
+    "2.6 Implement `GET /audit/claims/{claimId}` query handler": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000772875
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003408747
+      }
+    ],
+    "3.1 Implement Claims table access layer": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000773057
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001664046
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002451039
+      }
+    ],
+    "3.3 Implement ClaimSessions table access layer": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000773201
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001664639
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002448611
+      }
+    ],
+    "3.4 Implement Claim ID generation and uniqueness guarantee": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000773368
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001665622
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002447029
+      }
+    ],
+    "4. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000773584
+      }
+    ],
+    "5.1 Implement upload validator for format/size": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000773743
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001666422
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002447926
+      }
+    ],
+    "6.1 Implement `ChannelMessage` normalization for Voice/Email/Chat adapters": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000773906
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002485405
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002946033
+      }
+    ],
+    "6.2 Implement Voice adapter with confidence-based confirmation and retry counter": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000774069
+      }
+    ],
+    "6.5 Implement Email/Chat adapters with unparseable-content handling": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000774229
+      }
+    ],
+    "6.7 Implement `lookupClaimSession` tool": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000774394
+      }
+    ],
+    "6.10 Implement session resume logic": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000774550
+      }
+    ],
+    "7.1 Implement `extractFields` tool": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000774702
+      }
+    ],
+    "7.3 Implement per-field clarification attempt counter and escalation": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000775379
+      }
+    ],
+    "7.5 Implement confidence-threshold confirmation and rejection re-request handling": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000775571
+      }
+    ],
+    "7.8 Implement confirm/restate attempt counter and adjuster escalation": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000775852
+      }
+    ],
+    "7.10 Implement all-fields-resolved transition to Assessment": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000776001
+      }
+    ],
+    "8. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000776151
+      }
+    ],
+    "9.1 Implement photo upload Lambda": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000776335
+      }
+    ],
+    "9.3 Implement Rekognition analysis aggregation": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000776493
+      }
+    ],
+    "9.5 Implement resubmission counter and escalation-to-adjuster lifecycle": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000776844
+      }
+    ],
+    "9.7 Wire Damage Assessment decisions through the Audit Log Service": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000776991
+      }
+    ],
+    "10.1 Implement claim frequency check": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000777141
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002485849
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002944955
+      }
+    ],
+    "10.3 Implement timeline discrepancy check": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000777325
+      }
+    ],
+    "10.5 Implement mocked watchlist/sanctions screening client interface": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000777475
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002486514
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002943583
+      }
+    ],
+    "10.6 Implement fraud flag aggregation from indicators": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000777630
+      }
+    ],
+    "10.8 Implement `resolveFraudReview` handler": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000777783
+      }
+    ],
+    "10.10 Wire Fraud Detection decisions through the Audit Log Service": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000777944
+      }
+    ],
+    "11. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000778093
+      }
+    ],
+    "12.1 Implement `ClaimLifecycleWorkflow` Step Functions state machine definition": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000778244
+      }
+    ],
+    "12.3 Implement lifecycle stage sequencing model/validator": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000778637
+      }
+    ],
+    "12.5 Implement stage retry/backoff and persistent-failure escalation": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000778796
+      }
+    ],
+    "12.7 Implement `EvaluateApproval` auto-approval decision logic": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000778969
+      }
+    ],
+    "12.9 Implement payout suspension check for fraud-flagged claims": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000779135
+      }
+    ],
+    "12.11 Implement adjuster decision recording handler": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000779334
+      }
+    ],
+    "12.13 Implement Notify Customer Lambda": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000779494
+      }
+    ],
+    "12.15 Implement payout idempotency and Paid transition": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000779662
+      }
+    ],
+    "13. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000779843
+      }
+    ],
+    "14.1 Implement dispute submission validation": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000779994
+      }
+    ],
+    "14.3 Implement `DisputeResolutionWorkflow` state machine definition": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000780160
+      }
+    ],
+    "14.4 Implement dispute review visibility data assembly": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000780329
+      }
+    ],
+    "14.6 Implement dispute resolution recording handler": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000780485
+      }
+    ],
+    "14.8 Wire dispute resolution audit event recording": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000780643
+      }
+    ],
+    "15.1 Implement Cognito authentication integration with generic error handling": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000780806
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002487535
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002947004
+      }
+    ],
+    "15.3 Implement PreAuthentication Lambda trigger for lockout tracking": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000780973
+      }
+    ],
+    "15.5 Implement session idle-timeout enforcement": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000781153
+      }
+    ],
+    "16.1 Implement claim-ownership authorization predicate": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000781345
+      }
+    ],
+    "16.3 Implement `GET /claims/{id}` status/history endpoint": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000781519
+      }
+    ],
+    "16.5 Implement `POST /claims/{id}/documents` endpoint": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000781688
+      }
+    ],
+    "16.6 Implement PII access authorization predicate with denial audit": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000781858
+      }
+    ],
+    "17. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785000782007
+      }
+    ],
+    "1. Set up project structure and shared foundations": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785001656374
+      }
+    ],
+    "5. Implement shared evidence upload validation": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785002449232
+      }
+    ],
+    "1.4 Write unit tests for configuration loader": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003010579
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003406451
+      }
+    ],
+    "2.3 Write property test for audit record completeness": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003012098
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003407377
+      }
+    ],
+    "2.5 Write property test for audit-write-precedes-effect": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003012464
+      }
+    ],
+    "2.7 Write property test for chronological per-claim audit retrieval": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003013406
+      }
+    ],
+    "2.8 Write property test for audit history access restriction": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003014764
+      }
+    ],
+    "2.9 Write unit tests for audit write failure classification": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003015390
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003409713
+      }
+    ],
+    "3.2 Write property test for status transition history invariant": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003016097
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003140105
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003399305
+      }
+    ],
+    "3.5 Write property test for unique claim creation": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003017637
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003140994
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003399599
+      }
+    ],
+    "5.2 Write property test for upload validation": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003018375
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003142455
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003398417
+      }
+    ],
+    "3. Implement Claims and Claim_Session data access layer": [
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003400292
+      },
+      {
+        "executionId": "0168396d-d1b3-4ca2-8bde-a3bce1e6f2a9",
+        "chatSessionId": "sess_01a86877-ef5b-4f53-88a3-e8becbe51088",
+        "timestamp": 1785003400656
+      }
+    ]
+  }
+}

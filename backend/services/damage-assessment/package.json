@@ -1,0 +1,14 @@
+{
+  "name": "@claims/damage-assessment",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Damage Assessment Service - Rekognition-based photo analysis producing severity rating, repair cost estimate, and confidence score",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@claims/shared": "0.1.0"
+  }
+}

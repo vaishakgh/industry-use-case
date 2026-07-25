@@ -1,0 +1,20 @@
+{
+  "name": "@claims/intake-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FNOL Intake Agent (Bedrock AgentCore) - voice/email/chat intake, structured field extraction, and cross-channel session continuity",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.1095.0",
+    "@aws-sdk/lib-dynamodb": "3.1095.0",
+    "@claims/shared": "0.1.0",
+    "ulid": "^2.3.0"
+  },
+  "devDependencies": {
+    "aws-sdk-client-mock": "4.1.0"
+  }
+}
