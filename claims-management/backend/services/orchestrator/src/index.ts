@@ -12,3 +12,7 @@
 export const ORCHESTRATOR_PACKAGE_NAME = '@claims/orchestrator';
 
 export * from './repository/claimsRepository';
+
+export * from './lifecycle';
+
+export * from './dispute';

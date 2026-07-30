@@ -1,0 +1,23 @@
+{
+  "name": "@claims/integration-tests",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Integration tests for the Claims Management system (requires deployed stack)",
+  "scripts": {
+    "test": "jest --config jest.config.js",
+    "test:ci": "jest --config jest.config.js --ci --forceExit"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "3.1095.0",
+    "@aws-sdk/client-dynamodb": "3.1095.0",
+    "@aws-sdk/client-lambda": "3.1095.0",
+    "@aws-sdk/client-s3": "3.1095.0",
+    "@aws-sdk/client-sfn": "3.1095.0",
+    "@aws-sdk/client-transcribe": "3.1095.0",
+    "@aws-sdk/lib-dynamodb": "3.1095.0",
+    "@types/jest": "30.0.0",
+    "jest": "30.4.2",
+    "ts-jest": "29.4.12",
+    "typescript": "5.9.3"
+  }
+}

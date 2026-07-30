@@ -1,0 +1,1 @@
+{"version":3,"file":"fraudFlagAggregation.js","sourceRoot":"","sources":["../../src/checks/fraudFlagAggregation.ts"],"names":[],"mappings":";;AA8BA,4DAOC;AAlBD;;;;;;;;;;GAUG;AACH,SAAgB,wBAAwB,CACtC,UAAkC;IAElC,OAAO;QACL,YAAY,EAAE,UAAU,CAAC,MAAM,GAAG,CAAC;QACnC,UAAU;KACX,CAAC;AACJ,CAAC"}

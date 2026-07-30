@@ -17,3 +17,7 @@ export * from './claim';
 export * from './claimSessions';
 
 export * from './channels';
+
+export * from './session';
+
+export * from './extraction';

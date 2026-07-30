@@ -1,0 +1,5116 @@
+{
+ "Resources": {
+  "EncryptionClaimsKeyB0F01EFE": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "Description": "CMK for Claims and ClaimSessions DynamoDB tables",
+    "EnableKeyRotation": true,
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::618257308782:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Encryption/ClaimsKey/Resource"
+   }
+  },
+  "EncryptionClaimsKeyAliasD6FEF60E": {
+   "Type": "AWS::KMS::Alias",
+   "Properties": {
+    "AliasName": "alias/claims-claims-key-dev",
+    "TargetKeyId": {
+     "Fn::GetAtt": [
+      "EncryptionClaimsKeyB0F01EFE",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Encryption/ClaimsKey/Alias/Resource"
+   }
+  },
+  "EncryptionAuditKey24434AF8": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "Description": "CMK for AuditLog DynamoDB table",
+    "EnableKeyRotation": true,
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::618257308782:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Encryption/AuditKey/Resource"
+   }
+  },
+  "EncryptionAuditKeyAliasBE22215A": {
+   "Type": "AWS::KMS::Alias",
+   "Properties": {
+    "AliasName": "alias/claims-audit-key-dev",
+    "TargetKeyId": {
+     "Fn::GetAtt": [
+      "EncryptionAuditKey24434AF8",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Encryption/AuditKey/Alias/Resource"
+   }
+  },
+  "EncryptionPhotosKey72335E0E": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "Description": "CMK for damage-photos S3 bucket",
+    "EnableKeyRotation": true,
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::618257308782:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Encryption/PhotosKey/Resource"
+   }
+  },
+  "EncryptionPhotosKeyAlias96085954": {
+   "Type": "AWS::KMS::Alias",
+   "Properties": {
+    "AliasName": "alias/claims-photos-key-dev",
+    "TargetKeyId": {
+     "Fn::GetAtt": [
+      "EncryptionPhotosKey72335E0E",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Encryption/PhotosKey/Alias/Resource"
+   }
+  },
+  "EncryptionDocumentsKey828B3A4F": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "Description": "CMK for claim-documents S3 bucket",
+    "EnableKeyRotation": true,
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::618257308782:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Encryption/DocumentsKey/Resource"
+   }
+  },
+  "EncryptionDocumentsKeyAlias273CC3DA": {
+   "Type": "AWS::KMS::Alias",
+   "Properties": {
+    "AliasName": "alias/claims-documents-key-dev",
+    "TargetKeyId": {
+     "Fn::GetAtt": [
+      "EncryptionDocumentsKey828B3A4F",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Encryption/DocumentsKey/Alias/Resource"
+   }
+  },
+  "EncryptionDenyAuditMutation9974686D": {
+   "Type": "AWS::IAM::ManagedPolicy",
+   "Properties": {
+    "Description": "Denies UpdateItem/DeleteItem on AuditLog table for immutability",
+    "ManagedPolicyName": "Encryption-deny-audit-mutation",
+    "Path": "/",
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:DeleteItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Deny",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DatabaseAuditLogTable81583F1A",
+         "Arn"
+        ]
+       },
+       "Sid": "DenyAuditLogMutation"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Encryption/DenyAuditMutation/Resource"
+   }
+  },
+  "DatabaseClaimsTableDE5ED1CC": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "claimId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "claimId",
+      "KeyType": "HASH"
+     }
+    ],
+    "PointInTimeRecoverySpecification": {
+     "PointInTimeRecoveryEnabled": true
+    },
+    "SSESpecification": {
+     "KMSMasterKeyId": {
+      "Fn::GetAtt": [
+       "EncryptionClaimsKeyB0F01EFE",
+       "Arn"
+      ]
+     },
+     "SSEEnabled": true,
+     "SSEType": "KMS"
+    },
+    "TableName": "claims-claims-dev"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Database/ClaimsTable/Resource"
+   }
+  },
+  "DatabaseClaimSessionsTable6D011EBC": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "claimId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "policyNumber",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "claimStatus",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "PolicyNumberStatusIndex",
+      "KeySchema": [
+       {
+        "AttributeName": "policyNumber",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "claimStatus",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "claimId",
+      "KeyType": "HASH"
+     }
+    ],
+    "SSESpecification": {
+     "KMSMasterKeyId": {
+      "Fn::GetAtt": [
+       "EncryptionClaimsKeyB0F01EFE",
+       "Arn"
+      ]
+     },
+     "SSEEnabled": true,
+     "SSEType": "KMS"
+    },
+    "TableName": "claims-claim-sessions-dev",
+    "TimeToLiveSpecification": {
+     "AttributeName": "expiresAt",
+     "Enabled": true
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Database/ClaimSessionsTable/Resource"
+   }
+  },
+  "DatabaseAuditLogTable81583F1A": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "logId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "claimId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "timestamp",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "ClaimIdIndex",
+      "KeySchema": [
+       {
+        "AttributeName": "claimId",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "timestamp",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "logId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "claimId",
+      "KeyType": "RANGE"
+     }
+    ],
+    "PointInTimeRecoverySpecification": {
+     "PointInTimeRecoveryEnabled": true
+    },
+    "SSESpecification": {
+     "KMSMasterKeyId": {
+      "Fn::GetAtt": [
+       "EncryptionAuditKey24434AF8",
+       "Arn"
+      ]
+     },
+     "SSEEnabled": true,
+     "SSEType": "KMS"
+    },
+    "TableName": "claims-audit-log-dev"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Database/AuditLogTable/Resource"
+   }
+  },
+  "DatabaseLoginAttemptsTableBD3C77B7": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "username",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "username",
+      "KeyType": "HASH"
+     }
+    ],
+    "SSESpecification": {
+     "SSEEnabled": true
+    },
+    "TableName": "claims-login-attempts-dev",
+    "TimeToLiveSpecification": {
+     "AttributeName": "expiresAt",
+     "Enabled": true
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Database/LoginAttemptsTable/Resource"
+   }
+  },
+  "StorageDamagePhotosBucket43047573": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "KMSMasterKeyID": {
+         "Fn::GetAtt": [
+          "EncryptionPhotosKey72335E0E",
+          "Arn"
+         ]
+        },
+        "SSEAlgorithm": "aws:kms"
+       }
+      }
+     ]
+    },
+    "BucketName": "claims-damage-photos-dev-eu-central-1",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "PUT",
+        "POST",
+        "GET"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ],
+       "MaxAge": 3600
+      }
+     ]
+    },
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "Id": "TransitionToIA",
+       "Status": "Enabled",
+       "Transitions": [
+        {
+         "StorageClass": "STANDARD_IA",
+         "TransitionInDays": 90
+        }
+       ]
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     }
+    ],
+    "VersioningConfiguration": {
+     "Status": "Enabled"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Storage/DamagePhotosBucket/Resource"
+   }
+  },
+  "StorageDamagePhotosBucketPolicyDA5E08F5": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "StorageDamagePhotosBucket43047573"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageDamagePhotosBucket43047573",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageDamagePhotosBucket43047573",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageDamagePhotosBucket43047573",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageDamagePhotosBucket43047573",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageDamagePhotosBucket43047573",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageDamagePhotosBucket43047573",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ],
+       "Sid": "DenyNonHTTPS"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Storage/DamagePhotosBucket/Policy/Resource"
+   }
+  },
+  "StorageDamagePhotosBucketAutoDeleteObjectsCustomResourceDFC61D8F": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "StorageDamagePhotosBucket43047573"
+    }
+   },
+   "DependsOn": [
+    "StorageDamagePhotosBucketPolicyDA5E08F5"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Storage/DamagePhotosBucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "StorageClaimDocumentsBucket7249398B": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "KMSMasterKeyID": {
+         "Fn::GetAtt": [
+          "EncryptionDocumentsKey828B3A4F",
+          "Arn"
+         ]
+        },
+        "SSEAlgorithm": "aws:kms"
+       }
+      }
+     ]
+    },
+    "BucketName": "claims-claim-documents-dev-eu-central-1",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "PUT",
+        "POST",
+        "GET"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ],
+       "MaxAge": 3600
+      }
+     ]
+    },
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "Id": "TransitionToIA",
+       "Status": "Enabled",
+       "Transitions": [
+        {
+         "StorageClass": "STANDARD_IA",
+         "TransitionInDays": 90
+        }
+       ]
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     }
+    ],
+    "VersioningConfiguration": {
+     "Status": "Enabled"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Storage/ClaimDocumentsBucket/Resource"
+   }
+  },
+  "StorageClaimDocumentsBucketPolicy39CC46E4": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "StorageClaimDocumentsBucket7249398B"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageClaimDocumentsBucket7249398B",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageClaimDocumentsBucket7249398B",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageClaimDocumentsBucket7249398B",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageClaimDocumentsBucket7249398B",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageClaimDocumentsBucket7249398B",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageClaimDocumentsBucket7249398B",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ],
+       "Sid": "DenyNonHTTPS"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Storage/ClaimDocumentsBucket/Policy/Resource"
+   }
+  },
+  "StorageClaimDocumentsBucketAutoDeleteObjectsCustomResourceC71905E6": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "StorageClaimDocumentsBucket7249398B"
+    }
+   },
+   "DependsOn": [
+    "StorageClaimDocumentsBucketPolicy39CC46E4"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Storage/ClaimDocumentsBucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "StorageDamagePhotosBucket43047573"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputeIntakeAgentFnServiceRole7DCB97CD": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/IntakeAgentFn/ServiceRole/Resource"
+   }
+  },
+  "ComputeIntakeAgentFnServiceRoleDefaultPolicy8AE2221B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "EncryptionAuditKey24434AF8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "EncryptionClaimsKeyB0F01EFE",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseClaimSessionsTable6D011EBC",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "DatabaseClaimsTableDE5ED1CC",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DatabaseClaimSessionsTable6D011EBC",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseAuditLogTable81583F1A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DatabaseAuditLogTable81583F1A",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "kms:Decrypt",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "EncryptionClaimsKeyB0F01EFE",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "transcribe:GetTranscriptionJob",
+        "transcribe:StartStreamTranscription",
+        "transcribe:StartTranscriptionJob"
+       ],
+       "Effect": "Allow",
+       "Resource": "*",
+       "Sid": "TranscribeStreamingAccess"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ComputeIntakeAgentFnServiceRoleDefaultPolicy8AE2221B",
+    "Roles": [
+     {
+      "Ref": "ComputeIntakeAgentFnServiceRole7DCB97CD"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/IntakeAgentFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ComputeIntakeAgentFn5735C66F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "824b143f0df25bcb41b89557e48c7f66e759d9dfafab5797525ec095f3d119c0.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "CLAIMS_TABLE_NAME": {
+       "Ref": "DatabaseClaimsTableDE5ED1CC"
+      },
+      "CLAIMS_SESSIONS_TABLE_NAME": {
+       "Ref": "DatabaseClaimSessionsTable6D011EBC"
+      },
+      "AUDIT_LOG_TABLE_NAME": {
+       "Ref": "DatabaseAuditLogTable81583F1A"
+      },
+      "STAGE": "dev",
+      "PHOTOS_BUCKET_NAME": {
+       "Ref": "StorageDamagePhotosBucket43047573"
+      }
+     }
+    },
+    "FunctionName": "claims-intake-agent-dev",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ComputeIntakeAgentFnServiceRole7DCB97CD",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "ComputeIntakeAgentFnServiceRoleDefaultPolicy8AE2221B",
+    "ComputeIntakeAgentFnServiceRole7DCB97CD"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/IntakeAgentFn/Resource",
+    "aws:asset:path": "asset.824b143f0df25bcb41b89557e48c7f66e759d9dfafab5797525ec095f3d119c0",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputeIntakeAgentFnAllowSes023552DA": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputeIntakeAgentFn5735C66F",
+      "Arn"
+     ]
+    },
+    "Principal": "ses.amazonaws.com",
+    "SourceAccount": {
+     "Ref": "AWS::AccountId"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/IntakeAgentFn/AllowSes"
+   }
+  },
+  "ComputeIntakeAgentFnSESInvoke5CE6D0EE": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputeIntakeAgentFn5735C66F",
+      "Arn"
+     ]
+    },
+    "Principal": "ses.amazonaws.com"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/IntakeAgentFn/SESInvoke"
+   }
+  },
+  "ComputeDamageAssessmentFnServiceRoleD6795445": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/DamageAssessmentFn/ServiceRole/Resource"
+   }
+  },
+  "ComputeDamageAssessmentFnServiceRoleDefaultPolicy56F2F228": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "EncryptionAuditKey24434AF8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "EncryptionClaimsKeyB0F01EFE",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseClaimsTableDE5ED1CC",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageDamagePhotosBucket43047573",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageDamagePhotosBucket43047573",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "EncryptionPhotosKey72335E0E",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseAuditLogTable81583F1A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DatabaseAuditLogTable81583F1A",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "rekognition:DetectLabels",
+        "rekognition:DetectModerationLabels"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ComputeDamageAssessmentFnServiceRoleDefaultPolicy56F2F228",
+    "Roles": [
+     {
+      "Ref": "ComputeDamageAssessmentFnServiceRoleD6795445"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/DamageAssessmentFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ComputeDamageAssessmentFn9A4F4266": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "0fa3de55a444c52ca30ac37676147d88014f244323fedceffe4182de4160b494.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "CLAIMS_TABLE_NAME": {
+       "Ref": "DatabaseClaimsTableDE5ED1CC"
+      },
+      "CLAIMS_SESSIONS_TABLE_NAME": {
+       "Ref": "DatabaseClaimSessionsTable6D011EBC"
+      },
+      "AUDIT_LOG_TABLE_NAME": {
+       "Ref": "DatabaseAuditLogTable81583F1A"
+      },
+      "STAGE": "dev",
+      "PHOTOS_BUCKET_NAME": {
+       "Ref": "StorageDamagePhotosBucket43047573"
+      }
+     }
+    },
+    "FunctionName": "claims-damage-assessment-dev",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ComputeDamageAssessmentFnServiceRoleD6795445",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 60
+   },
+   "DependsOn": [
+    "ComputeDamageAssessmentFnServiceRoleDefaultPolicy56F2F228",
+    "ComputeDamageAssessmentFnServiceRoleD6795445"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/DamageAssessmentFn/Resource",
+    "aws:asset:path": "asset.0fa3de55a444c52ca30ac37676147d88014f244323fedceffe4182de4160b494",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputeFraudDetectionFnServiceRole1CD22835": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/FraudDetectionFn/ServiceRole/Resource"
+   }
+  },
+  "ComputeFraudDetectionFnServiceRoleDefaultPolicy276FD037": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "EncryptionAuditKey24434AF8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "EncryptionClaimsKeyB0F01EFE",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseClaimsTableDE5ED1CC",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseAuditLogTable81583F1A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DatabaseAuditLogTable81583F1A",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "kms:Decrypt",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "EncryptionClaimsKeyB0F01EFE",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ComputeFraudDetectionFnServiceRoleDefaultPolicy276FD037",
+    "Roles": [
+     {
+      "Ref": "ComputeFraudDetectionFnServiceRole1CD22835"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/FraudDetectionFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ComputeFraudDetectionFn17A9CC54": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "477dc55ac109996092b4db0286c4c478acc02f2b0c5a21d5ca5854ab67cfb56c.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "CLAIMS_TABLE_NAME": {
+       "Ref": "DatabaseClaimsTableDE5ED1CC"
+      },
+      "CLAIMS_SESSIONS_TABLE_NAME": {
+       "Ref": "DatabaseClaimSessionsTable6D011EBC"
+      },
+      "AUDIT_LOG_TABLE_NAME": {
+       "Ref": "DatabaseAuditLogTable81583F1A"
+      },
+      "STAGE": "dev"
+     }
+    },
+    "FunctionName": "claims-fraud-detection-dev",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ComputeFraudDetectionFnServiceRole1CD22835",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "ComputeFraudDetectionFnServiceRoleDefaultPolicy276FD037",
+    "ComputeFraudDetectionFnServiceRole1CD22835"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/FraudDetectionFn/Resource",
+    "aws:asset:path": "asset.477dc55ac109996092b4db0286c4c478acc02f2b0c5a21d5ca5854ab67cfb56c",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputeAuditLogFnServiceRole59A2A5A6": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/AuditLogFn/ServiceRole/Resource"
+   }
+  },
+  "ComputeAuditLogFnServiceRoleDefaultPolicyD3160681": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "EncryptionAuditKey24434AF8",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseAuditLogTable81583F1A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DatabaseAuditLogTable81583F1A",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ComputeAuditLogFnServiceRoleDefaultPolicyD3160681",
+    "Roles": [
+     {
+      "Ref": "ComputeAuditLogFnServiceRole59A2A5A6"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/AuditLogFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ComputeAuditLogFnF99A8AE8": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "e818e77e885bcbafab4f56392625d3550d5aafec531c2b624f6a91f98388454f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "AUDIT_LOG_TABLE_NAME": {
+       "Ref": "DatabaseAuditLogTable81583F1A"
+      },
+      "STAGE": "dev"
+     }
+    },
+    "FunctionName": "claims-audit-log-dev",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ComputeAuditLogFnServiceRole59A2A5A6",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "ComputeAuditLogFnServiceRoleDefaultPolicyD3160681",
+    "ComputeAuditLogFnServiceRole59A2A5A6"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/AuditLogFn/Resource",
+    "aws:asset:path": "asset.e818e77e885bcbafab4f56392625d3550d5aafec531c2b624f6a91f98388454f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputeEvaluateApprovalFnServiceRole81C4531F": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/EvaluateApprovalFn/ServiceRole/Resource"
+   }
+  },
+  "ComputeEvaluateApprovalFnServiceRoleDefaultPolicy52ADA8E1": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "EncryptionAuditKey24434AF8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "EncryptionClaimsKeyB0F01EFE",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseClaimsTableDE5ED1CC",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseAuditLogTable81583F1A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DatabaseAuditLogTable81583F1A",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "kms:Decrypt",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "EncryptionClaimsKeyB0F01EFE",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ComputeEvaluateApprovalFnServiceRoleDefaultPolicy52ADA8E1",
+    "Roles": [
+     {
+      "Ref": "ComputeEvaluateApprovalFnServiceRole81C4531F"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/EvaluateApprovalFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ComputeEvaluateApprovalFnC4447566": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "CLAIMS_TABLE_NAME": {
+       "Ref": "DatabaseClaimsTableDE5ED1CC"
+      },
+      "CLAIMS_SESSIONS_TABLE_NAME": {
+       "Ref": "DatabaseClaimSessionsTable6D011EBC"
+      },
+      "AUDIT_LOG_TABLE_NAME": {
+       "Ref": "DatabaseAuditLogTable81583F1A"
+      },
+      "STAGE": "dev"
+     }
+    },
+    "FunctionName": "claims-evaluate-approval-dev",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ComputeEvaluateApprovalFnServiceRole81C4531F",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "ComputeEvaluateApprovalFnServiceRoleDefaultPolicy52ADA8E1",
+    "ComputeEvaluateApprovalFnServiceRole81C4531F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/EvaluateApprovalFn/Resource",
+    "aws:asset:path": "asset.952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputeRunPayoutFnServiceRole2A1A50F5": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/RunPayoutFn/ServiceRole/Resource"
+   }
+  },
+  "ComputeRunPayoutFnServiceRoleDefaultPolicy02482BF8": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "EncryptionAuditKey24434AF8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "EncryptionClaimsKeyB0F01EFE",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseClaimsTableDE5ED1CC",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseAuditLogTable81583F1A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DatabaseAuditLogTable81583F1A",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ComputeRunPayoutFnServiceRoleDefaultPolicy02482BF8",
+    "Roles": [
+     {
+      "Ref": "ComputeRunPayoutFnServiceRole2A1A50F5"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/RunPayoutFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ComputeRunPayoutFnF67D2E22": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "CLAIMS_TABLE_NAME": {
+       "Ref": "DatabaseClaimsTableDE5ED1CC"
+      },
+      "CLAIMS_SESSIONS_TABLE_NAME": {
+       "Ref": "DatabaseClaimSessionsTable6D011EBC"
+      },
+      "AUDIT_LOG_TABLE_NAME": {
+       "Ref": "DatabaseAuditLogTable81583F1A"
+      },
+      "STAGE": "dev"
+     }
+    },
+    "FunctionName": "claims-run-payout-dev",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ComputeRunPayoutFnServiceRole2A1A50F5",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "ComputeRunPayoutFnServiceRoleDefaultPolicy02482BF8",
+    "ComputeRunPayoutFnServiceRole2A1A50F5"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/RunPayoutFn/Resource",
+    "aws:asset:path": "asset.952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputeNotifyCustomerFnServiceRole5EB6A0A6": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/NotifyCustomerFn/ServiceRole/Resource"
+   }
+  },
+  "ComputeNotifyCustomerFnServiceRoleDefaultPolicy2A09AE12": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "EncryptionClaimsKeyB0F01EFE",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseClaimsTableDE5ED1CC",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "ses:SendEmail",
+        "ses:SendRawEmail"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ComputeNotifyCustomerFnServiceRoleDefaultPolicy2A09AE12",
+    "Roles": [
+     {
+      "Ref": "ComputeNotifyCustomerFnServiceRole5EB6A0A6"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/NotifyCustomerFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ComputeNotifyCustomerFn3664C393": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "CLAIMS_TABLE_NAME": {
+       "Ref": "DatabaseClaimsTableDE5ED1CC"
+      },
+      "CLAIMS_SESSIONS_TABLE_NAME": {
+       "Ref": "DatabaseClaimSessionsTable6D011EBC"
+      },
+      "AUDIT_LOG_TABLE_NAME": {
+       "Ref": "DatabaseAuditLogTable81583F1A"
+      },
+      "STAGE": "dev"
+     }
+    },
+    "FunctionName": "claims-notify-customer-dev",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ComputeNotifyCustomerFnServiceRole5EB6A0A6",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "ComputeNotifyCustomerFnServiceRoleDefaultPolicy2A09AE12",
+    "ComputeNotifyCustomerFnServiceRole5EB6A0A6"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/NotifyCustomerFn/Resource",
+    "aws:asset:path": "asset.952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputePortalApiFnServiceRole021BAB9B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/PortalApiFn/ServiceRole/Resource"
+   }
+  },
+  "ComputePortalApiFnServiceRoleDefaultPolicyDF925A30": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "EncryptionAuditKey24434AF8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "EncryptionClaimsKeyB0F01EFE",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseAuditLogTable81583F1A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "DatabaseClaimsTableDE5ED1CC",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DatabaseAuditLogTable81583F1A",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageClaimDocumentsBucket7249398B",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageClaimDocumentsBucket7249398B",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "EncryptionDocumentsKey828B3A4F",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseLoginAttemptsTableBD3C77B7",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ComputePortalApiFnServiceRoleDefaultPolicyDF925A30",
+    "Roles": [
+     {
+      "Ref": "ComputePortalApiFnServiceRole021BAB9B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/PortalApiFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ComputePortalApiFnFD0A436C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "2d3777811055b0b2d98e971d8379fc5754190b95b18cc3c3ac5a177076b24d76.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "CLAIMS_TABLE_NAME": {
+       "Ref": "DatabaseClaimsTableDE5ED1CC"
+      },
+      "CLAIMS_SESSIONS_TABLE_NAME": {
+       "Ref": "DatabaseClaimSessionsTable6D011EBC"
+      },
+      "AUDIT_LOG_TABLE_NAME": {
+       "Ref": "DatabaseAuditLogTable81583F1A"
+      },
+      "STAGE": "dev",
+      "DOCUMENTS_BUCKET_NAME": {
+       "Ref": "StorageClaimDocumentsBucket7249398B"
+      },
+      "LOGIN_ATTEMPTS_TABLE_NAME": {
+       "Ref": "DatabaseLoginAttemptsTableBD3C77B7"
+      }
+     }
+    },
+    "FunctionName": "claims-portal-api-dev",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnServiceRole021BAB9B",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "ComputePortalApiFnServiceRoleDefaultPolicyDF925A30",
+    "ComputePortalApiFnServiceRole021BAB9B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/PortalApiFn/Resource",
+    "aws:asset:path": "asset.2d3777811055b0b2d98e971d8379fc5754190b95b18cc3c3ac5a177076b24d76",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ComputePreAuthenticationFnServiceRole34286B34": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/PreAuthenticationFn/ServiceRole/Resource"
+   }
+  },
+  "ComputePreAuthenticationFnServiceRoleDefaultPolicy4159D871": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DatabaseLoginAttemptsTableBD3C77B7",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ComputePreAuthenticationFnServiceRoleDefaultPolicy4159D871",
+    "Roles": [
+     {
+      "Ref": "ComputePreAuthenticationFnServiceRole34286B34"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/PreAuthenticationFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ComputePreAuthenticationFn46B604D7": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
+     "S3Key": "2d3777811055b0b2d98e971d8379fc5754190b95b18cc3c3ac5a177076b24d76.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "LOGIN_ATTEMPTS_TABLE_NAME": {
+       "Ref": "DatabaseLoginAttemptsTableBD3C77B7"
+      }
+     }
+    },
+    "FunctionName": "claims-pre-auth-dev",
+    "Handler": "index.handler",
+    "MemorySize": 128,
+    "Role": {
+     "Fn::GetAtt": [
+      "ComputePreAuthenticationFnServiceRole34286B34",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 5
+   },
+   "DependsOn": [
+    "ComputePreAuthenticationFnServiceRoleDefaultPolicy4159D871",
+    "ComputePreAuthenticationFnServiceRole34286B34"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Compute/PreAuthenticationFn/Resource",
+    "aws:asset:path": "asset.2d3777811055b0b2d98e971d8379fc5754190b95b18cc3c3ac5a177076b24d76",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "AuthCustomerUserPool4132CEB7": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_email",
+       "Priority": 1
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": true
+    },
+    "AliasAttributes": [
+     "email"
+    ],
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "LambdaConfig": {
+     "PreAuthentication": {
+      "Fn::GetAtt": [
+       "ComputePreAuthenticationFn46B604D7",
+       "Arn"
+      ]
+     }
+    },
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 8,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": true,
+      "RequireUppercase": true,
+      "TemporaryPasswordValidityDays": 7
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     },
+     {
+      "Mutable": true,
+      "Name": "name",
+      "Required": true
+     },
+     {
+      "AttributeDataType": "String",
+      "Mutable": true,
+      "Name": "policyNumber"
+     }
+    ],
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolName": "claims-customers-dev",
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Auth/CustomerUserPool/Resource"
+   }
+  },
+  "AuthCustomerUserPoolPreAuthenticationCognito0627E3E2": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePreAuthenticationFn46B604D7",
+      "Arn"
+     ]
+    },
+    "Principal": "cognito-idp.amazonaws.com",
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "AuthCustomerUserPool4132CEB7",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Auth/CustomerUserPool/PreAuthenticationCognito"
+   }
+  },
+  "AuthCustomerUserPoolPortalAppClient4312C81A": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AccessTokenValidity": 60,
+    "AllowedOAuthFlows": [
+     "implicit",
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "profile",
+     "phone",
+     "email",
+     "openid",
+     "aws.cognito.signin.user.admin"
+    ],
+    "CallbackURLs": [
+     "https://example.com"
+    ],
+    "ClientName": "claims-portal-client-dev",
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_USER_SRP_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "GenerateSecret": false,
+    "IdTokenValidity": 60,
+    "PreventUserExistenceErrors": "ENABLED",
+    "RefreshTokenValidity": 43200,
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "TokenValidityUnits": {
+     "AccessToken": "minutes",
+     "IdToken": "minutes",
+     "RefreshToken": "minutes"
+    },
+    "UserPoolId": {
+     "Ref": "AuthCustomerUserPool4132CEB7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Auth/CustomerUserPool/PortalAppClient/Resource"
+   }
+  },
+  "AuthCustomerGroup5AFDB102": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "Authenticated policyholders accessing the Customer Portal",
+    "GroupName": "Customer",
+    "UserPoolId": {
+     "Ref": "AuthCustomerUserPool4132CEB7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Auth/CustomerGroup"
+   }
+  },
+  "AuthAdjusterGroup6AC220B1": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "Human adjusters reviewing complex claims",
+    "GroupName": "Human_Adjuster",
+    "UserPoolId": {
+     "Ref": "AuthCustomerUserPool4132CEB7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Auth/AdjusterGroup"
+   }
+  },
+  "AuthFraudAnalystGroupCF3CE156": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "Fraud analysts reviewing flagged claims",
+    "GroupName": "Fraud_Analyst",
+    "UserPoolId": {
+     "Ref": "AuthCustomerUserPool4132CEB7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Auth/FraudAnalystGroup"
+   }
+  },
+  "AuthComplianceOfficerGroup976F4707": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "Compliance officers querying audit logs",
+    "GroupName": "ComplianceOfficer",
+    "UserPoolId": {
+     "Ref": "AuthCustomerUserPool4132CEB7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Auth/ComplianceOfficerGroup"
+   }
+  },
+  "OrchestrationClaimLifecycleWorkflowRoleA9B3FCBE": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "states.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Orchestration/ClaimLifecycleWorkflow/Role/Resource"
+   }
+  },
+  "OrchestrationClaimLifecycleWorkflowRoleDefaultPolicy6DFF750F": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ComputeDamageAssessmentFn9A4F4266",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "ComputeEvaluateApprovalFnC4447566",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "ComputeFraudDetectionFn17A9CC54",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "ComputeNotifyCustomerFn3664C393",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "ComputeRunPayoutFnF67D2E22",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ComputeDamageAssessmentFn9A4F4266",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ComputeEvaluateApprovalFnC4447566",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ComputeFraudDetectionFn17A9CC54",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ComputeNotifyCustomerFn3664C393",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ComputeRunPayoutFnF67D2E22",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "OrchestrationClaimLifecycleWorkflowRoleDefaultPolicy6DFF750F",
+    "Roles": [
+     {
+      "Ref": "OrchestrationClaimLifecycleWorkflowRoleA9B3FCBE"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Orchestration/ClaimLifecycleWorkflow/Role/DefaultPolicy/Resource"
+   }
+  },
+  "OrchestrationClaimLifecycleWorkflow775A9864": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "DefinitionString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"StartAt\":\"AwaitIntakeCompletion\",\"States\":{\"AwaitIntakeCompletion\":{\"Type\":\"Wait\",\"Comment\":\"Placeholder for waitForTaskToken - Intake Agent sends task success when fields are resolved\",\"Seconds\":1,\"Next\":\"RunDamageAssessment\"},\"RunDamageAssessment\":{\"Next\":\"RunFraudCheck\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2},{\"ErrorEquals\":[\"Claims.TransientFailure\",\"Lambda.ServiceException\",\"Lambda.TooManyRequestsException\"],\"IntervalSeconds\":5,\"MaxAttempts\":3,\"BackoffRate\":2}],\"Catch\":[{\"ErrorEquals\":[\"Claims.PersistentFailure\"],\"ResultPath\":\"$.error\",\"Next\":\"DamageAssessmentFailed\"}],\"Type\":\"Task\",\"Comment\":\"Analyze damage photos and produce severity rating + cost estimate\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ComputeDamageAssessmentFn9A4F4266",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"}},\"RunFraudCheck\":{\"Next\":\"EvaluateApproval\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2},{\"ErrorEquals\":[\"Claims.TransientFailure\",\"Lambda.ServiceException\",\"Lambda.TooManyRequestsException\"],\"IntervalSeconds\":5,\"MaxAttempts\":3,\"BackoffRate\":2}],\"Catch\":[{\"ErrorEquals\":[\"Claims.PersistentFailure\"],\"ResultPath\":\"$.error\",\"Next\":\"FraudCheckFailed\"}],\"Type\":\"Task\",\"Comment\":\"Evaluate claim frequency, timeline, and watchlist screening\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ComputeFraudDetectionFn17A9CC54",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"}},\"EvaluateApproval\":{\"Next\":\"ApprovalRouting\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"Comment\":\"Decision table: auto-approve or route to adjuster\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ComputeEvaluateApprovalFnC4447566",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"}},\"AwaitFraudAnalystDecision\":{\"Type\":\"Wait\",\"Comment\":\"Placeholder for waitForTaskToken - Fraud Analyst sends task success with decision\",\"Seconds\":1,\"Next\":\"EvaluateApproval\"},\"ApprovalRouting\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.decision\",\"StringEquals\":\"approved\",\"Next\":\"RunPayout\"},{\"Variable\":\"$.decision\",\"StringEquals\":\"fraud_flagged\",\"Next\":\"AwaitFraudAnalystDecision\"}],\"Default\":\"AwaitAdjusterDecision\"},\"AwaitAdjusterDecision\":{\"Type\":\"Wait\",\"Comment\":\"Placeholder for waitForTaskToken - Human Adjuster sends task success with decision\",\"Seconds\":1,\"Next\":\"NotifyCustomer\"},\"NotifyCustomer\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"Comment\":\"Deliver terminal-status notification via original channel\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ComputeNotifyCustomerFn3664C393",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"}},\"RunPayout\":{\"Next\":\"NotifyCustomer\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2},{\"ErrorEquals\":[\"Claims.TransientFailure\",\"Lambda.ServiceException\",\"Lambda.TooManyRequestsException\"],\"IntervalSeconds\":5,\"MaxAttempts\":3,\"BackoffRate\":2}],\"Type\":\"Task\",\"Comment\":\"Initiate payment with claimId as idempotency key\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ComputeRunPayoutFnF67D2E22",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"}},\"FraudCheckFailed\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"Pending_Adjuster_Review\",\"reason\":\"FraudCheckFailure\"},\"End\":true},\"DamageAssessmentFailed\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"Pending_Adjuster_Review\",\"reason\":\"DamageAssessmentFailure\"},\"End\":true}},\"TimeoutSeconds\":2592000}"
+      ]
+     ]
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "OrchestrationClaimLifecycleWorkflowRoleA9B3FCBE",
+      "Arn"
+     ]
+    },
+    "StateMachineName": "claims-claim-lifecycle-dev",
+    "StateMachineType": "STANDARD"
+   },
+   "DependsOn": [
+    "OrchestrationClaimLifecycleWorkflowRoleDefaultPolicy6DFF750F",
+    "OrchestrationClaimLifecycleWorkflowRoleA9B3FCBE"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Orchestration/ClaimLifecycleWorkflow/Resource"
+   }
+  },
+  "OrchestrationDisputeResolutionWorkflowRoleBC6D1755": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "states.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Orchestration/DisputeResolutionWorkflow/Role/Resource"
+   }
+  },
+  "OrchestrationDisputeResolutionWorkflowRoleDefaultPolicy4A11D69F": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ComputeNotifyCustomerFn3664C393",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ComputeNotifyCustomerFn3664C393",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "OrchestrationDisputeResolutionWorkflowRoleDefaultPolicy4A11D69F",
+    "Roles": [
+     {
+      "Ref": "OrchestrationDisputeResolutionWorkflowRoleBC6D1755"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Orchestration/DisputeResolutionWorkflow/Role/DefaultPolicy/Resource"
+   }
+  },
+  "OrchestrationDisputeResolutionWorkflowE9C3FD75": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "DefinitionString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"StartAt\":\"ValidateDispute\",\"States\":{\"ValidateDispute\":{\"Type\":\"Pass\",\"Comment\":\"Validate dispute submission (status check, reason length)\",\"Next\":\"RouteToAdjuster\"},\"RouteToAdjuster\":{\"Type\":\"Pass\",\"Comment\":\"Assemble review package and assign to adjuster queue\",\"Next\":\"AwaitAdjusterResolution\"},\"AwaitAdjusterResolution\":{\"Type\":\"Wait\",\"Comment\":\"Placeholder for waitForTaskToken - Adjuster resolves dispute\",\"Seconds\":1,\"Next\":\"NotifyDisputeResolution\"},\"NotifyDisputeResolution\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"Comment\":\"Notify customer of dispute resolution\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ComputeNotifyCustomerFn3664C393",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"}}},\"TimeoutSeconds\":1209600}"
+      ]
+     ]
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "OrchestrationDisputeResolutionWorkflowRoleBC6D1755",
+      "Arn"
+     ]
+    },
+    "StateMachineName": "claims-dispute-resolution-dev",
+    "StateMachineType": "STANDARD"
+   },
+   "DependsOn": [
+    "OrchestrationDisputeResolutionWorkflowRoleDefaultPolicy4A11D69F",
+    "OrchestrationDisputeResolutionWorkflowRoleBC6D1755"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Orchestration/DisputeResolutionWorkflow/Resource"
+   }
+  },
+  "ApiPortalApiC147ED77": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "Customer Portal API for Claims Management system",
+    "Name": "claims-portal-api-dev"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Resource"
+   }
+  },
+  "ApiPortalApiCloudWatchRole686C6266": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/CloudWatchRole/Resource"
+   }
+  },
+  "ApiPortalApiAccount5D5B4D0F": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "ApiPortalApiCloudWatchRole686C6266",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "ApiPortalApiC147ED77"
+   ],
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Account"
+   }
+  },
+  "ApiPortalApiDeployment38920E7D8de6ef7a63f72075b66bd62a4327301c": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Customer Portal API for Claims Management system",
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "DependsOn": [
+    "ApiPortalApiauthloginOPTIONS19D8D803",
+    "ApiPortalApiauthloginPOST8635503D",
+    "ApiPortalApiauthloginF5A153BD",
+    "ApiPortalApiauthOPTIONSC5CC5AC7",
+    "ApiPortalApiauth1229D2D3",
+    "ApiPortalApiclaimsiddisputesOPTIONS08505CA1",
+    "ApiPortalApiclaimsiddisputesPOST51C9C3EE",
+    "ApiPortalApiclaimsiddisputesCCCD2AD0",
+    "ApiPortalApiclaimsiddocumentsOPTIONS71928D38",
+    "ApiPortalApiclaimsiddocumentsPOST024B18EE",
+    "ApiPortalApiclaimsiddocuments49CF2313",
+    "ApiPortalApiclaimsidGET4B41E4A0",
+    "ApiPortalApiclaimsidOPTIONS755F67F7",
+    "ApiPortalApiclaimsid45A2D721",
+    "ApiPortalApiclaimsGET5CB66899",
+    "ApiPortalApiclaimsOPTIONSE35AD060",
+    "ApiPortalApiclaimsC15CF7F6",
+    "ApiPortalApiOPTIONS1F99AED2"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Deployment/Resource"
+   }
+  },
+  "ApiPortalApiDeploymentStagedev8AD6A08E": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "ApiPortalApiDeployment38920E7D8de6ef7a63f72075b66bd62a4327301c"
+    },
+    "MethodSettings": [
+     {
+      "DataTraceEnabled": false,
+      "HttpMethod": "*",
+      "LoggingLevel": "INFO",
+      "MetricsEnabled": true,
+      "ResourcePath": "/*",
+      "ThrottlingBurstLimit": 200,
+      "ThrottlingRateLimit": 100
+     }
+    ],
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    },
+    "StageName": "dev"
+   },
+   "DependsOn": [
+    "ApiPortalApiAccount5D5B4D0F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/DeploymentStage.dev/Resource"
+   }
+  },
+  "ApiPortalApiOPTIONS1F99AED2": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization,X-Amz-Date,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "ApiPortalApiC147ED77",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/OPTIONS/Resource"
+   }
+  },
+  "ApiPortalApiauth1229D2D3": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "ApiPortalApiC147ED77",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "auth",
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/auth/Resource"
+   }
+  },
+  "ApiPortalApiauthOPTIONSC5CC5AC7": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization,X-Amz-Date,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ApiPortalApiauth1229D2D3"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/auth/OPTIONS/Resource"
+   }
+  },
+  "ApiPortalApiauthloginF5A153BD": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ApiPortalApiauth1229D2D3"
+    },
+    "PathPart": "login",
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/auth/login/Resource"
+   }
+  },
+  "ApiPortalApiauthloginOPTIONS19D8D803": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization,X-Amz-Date,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ApiPortalApiauthloginF5A153BD"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/auth/login/OPTIONS/Resource"
+   }
+  },
+  "ApiPortalApiauthloginPOSTApiPermissionclaimsdevApiPortalApi5B24AE2EPOSTauthloginABC838A1": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/",
+       {
+        "Ref": "ApiPortalApiDeploymentStagedev8AD6A08E"
+       },
+       "/POST/auth/login"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/auth/login/POST/ApiPermission.claimsdevApiPortalApi5B24AE2E.POST..auth.login"
+   }
+  },
+  "ApiPortalApiauthloginPOSTApiPermissionTestclaimsdevApiPortalApi5B24AE2EPOSTauthloginBF5E78DA": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/test-invoke-stage/POST/auth/login"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/auth/login/POST/ApiPermission.Test.claimsdevApiPortalApi5B24AE2E.POST..auth.login"
+   }
+  },
+  "ApiPortalApiauthloginPOST8635503D": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ComputePortalApiFnFD0A436C",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiPortalApiauthloginF5A153BD"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/auth/login/POST/Resource"
+   }
+  },
+  "ApiPortalApiclaimsC15CF7F6": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "ApiPortalApiC147ED77",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "claims",
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/Resource"
+   }
+  },
+  "ApiPortalApiclaimsOPTIONSE35AD060": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization,X-Amz-Date,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ApiPortalApiclaimsC15CF7F6"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/OPTIONS/Resource"
+   }
+  },
+  "ApiPortalApiclaimsGETApiPermissionclaimsdevApiPortalApi5B24AE2EGETclaimsA7484E9B": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/",
+       {
+        "Ref": "ApiPortalApiDeploymentStagedev8AD6A08E"
+       },
+       "/GET/claims"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/GET/ApiPermission.claimsdevApiPortalApi5B24AE2E.GET..claims"
+   }
+  },
+  "ApiPortalApiclaimsGETApiPermissionTestclaimsdevApiPortalApi5B24AE2EGETclaims7313F65E": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/test-invoke-stage/GET/claims"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/GET/ApiPermission.Test.claimsdevApiPortalApi5B24AE2E.GET..claims"
+   }
+  },
+  "ApiPortalApiclaimsGET5CB66899": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "ApiCognitoAuthorizer23B91BA2"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ComputePortalApiFnFD0A436C",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiPortalApiclaimsC15CF7F6"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/GET/Resource"
+   }
+  },
+  "ApiPortalApiclaimsid45A2D721": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ApiPortalApiclaimsC15CF7F6"
+    },
+    "PathPart": "{id}",
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/Resource"
+   }
+  },
+  "ApiPortalApiclaimsidOPTIONS755F67F7": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization,X-Amz-Date,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ApiPortalApiclaimsid45A2D721"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/OPTIONS/Resource"
+   }
+  },
+  "ApiPortalApiclaimsidGETApiPermissionclaimsdevApiPortalApi5B24AE2EGETclaimsid46E2D118": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/",
+       {
+        "Ref": "ApiPortalApiDeploymentStagedev8AD6A08E"
+       },
+       "/GET/claims/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/GET/ApiPermission.claimsdevApiPortalApi5B24AE2E.GET..claims.{id}"
+   }
+  },
+  "ApiPortalApiclaimsidGETApiPermissionTestclaimsdevApiPortalApi5B24AE2EGETclaimsidF12FD5D1": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/test-invoke-stage/GET/claims/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/GET/ApiPermission.Test.claimsdevApiPortalApi5B24AE2E.GET..claims.{id}"
+   }
+  },
+  "ApiPortalApiclaimsidGET4B41E4A0": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "ApiCognitoAuthorizer23B91BA2"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ComputePortalApiFnFD0A436C",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiPortalApiclaimsid45A2D721"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/GET/Resource"
+   }
+  },
+  "ApiPortalApiclaimsiddocuments49CF2313": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ApiPortalApiclaimsid45A2D721"
+    },
+    "PathPart": "documents",
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/documents/Resource"
+   }
+  },
+  "ApiPortalApiclaimsiddocumentsOPTIONS71928D38": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization,X-Amz-Date,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ApiPortalApiclaimsiddocuments49CF2313"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/documents/OPTIONS/Resource"
+   }
+  },
+  "ApiPortalApiclaimsiddocumentsPOSTApiPermissionclaimsdevApiPortalApi5B24AE2EPOSTclaimsiddocuments83736F97": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/",
+       {
+        "Ref": "ApiPortalApiDeploymentStagedev8AD6A08E"
+       },
+       "/POST/claims/*/documents"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/documents/POST/ApiPermission.claimsdevApiPortalApi5B24AE2E.POST..claims.{id}.documents"
+   }
+  },
+  "ApiPortalApiclaimsiddocumentsPOSTApiPermissionTestclaimsdevApiPortalApi5B24AE2EPOSTclaimsiddocuments7D796F3B": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/test-invoke-stage/POST/claims/*/documents"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/documents/POST/ApiPermission.Test.claimsdevApiPortalApi5B24AE2E.POST..claims.{id}.documents"
+   }
+  },
+  "ApiPortalApiclaimsiddocumentsPOST024B18EE": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "ApiCognitoAuthorizer23B91BA2"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ComputePortalApiFnFD0A436C",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiPortalApiclaimsiddocuments49CF2313"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/documents/POST/Resource"
+   }
+  },
+  "ApiPortalApiclaimsiddisputesCCCD2AD0": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ApiPortalApiclaimsid45A2D721"
+    },
+    "PathPart": "disputes",
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/disputes/Resource"
+   }
+  },
+  "ApiPortalApiclaimsiddisputesOPTIONS08505CA1": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization,X-Amz-Date,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ApiPortalApiclaimsiddisputesCCCD2AD0"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/disputes/OPTIONS/Resource"
+   }
+  },
+  "ApiPortalApiclaimsiddisputesPOSTApiPermissionclaimsdevApiPortalApi5B24AE2EPOSTclaimsiddisputesA61F0253": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/",
+       {
+        "Ref": "ApiPortalApiDeploymentStagedev8AD6A08E"
+       },
+       "/POST/claims/*/disputes"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/disputes/POST/ApiPermission.claimsdevApiPortalApi5B24AE2E.POST..claims.{id}.disputes"
+   }
+  },
+  "ApiPortalApiclaimsiddisputesPOSTApiPermissionTestclaimsdevApiPortalApi5B24AE2EPOSTclaimsiddisputesB7E578BC": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ComputePortalApiFnFD0A436C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:eu-central-1:618257308782:",
+       {
+        "Ref": "ApiPortalApiC147ED77"
+       },
+       "/test-invoke-stage/POST/claims/*/disputes"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/disputes/POST/ApiPermission.Test.claimsdevApiPortalApi5B24AE2E.POST..claims.{id}.disputes"
+   }
+  },
+  "ApiPortalApiclaimsiddisputesPOST51C9C3EE": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "ApiCognitoAuthorizer23B91BA2"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ComputePortalApiFnFD0A436C",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiPortalApiclaimsiddisputesCCCD2AD0"
+    },
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/PortalApi/Default/claims/{id}/disputes/POST/Resource"
+   }
+  },
+  "ApiCognitoAuthorizer23B91BA2": {
+   "Type": "AWS::ApiGateway::Authorizer",
+   "Properties": {
+    "IdentitySource": "method.request.header.Authorization",
+    "Name": "claims-cognito-authorizer",
+    "ProviderARNs": [
+     {
+      "Fn::GetAtt": [
+       "AuthCustomerUserPool4132CEB7",
+       "Arn"
+      ]
+     }
+    ],
+    "RestApiId": {
+     "Ref": "ApiPortalApiC147ED77"
+    },
+    "Type": "COGNITO_USER_POOLS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Api/CognitoAuthorizer/Resource"
+   }
+  },
+  "ChannelsClaimEmailRuleSet435D92A2": {
+   "Type": "AWS::SES::ReceiptRuleSet",
+   "Properties": {
+    "RuleSetName": "claims-claim-emails-dev"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Channels/ClaimEmailRuleSet/Resource"
+   }
+  },
+  "ChannelsClaimEmailRuleSetInboundClaimEmail647B9BA1": {
+   "Type": "AWS::SES::ReceiptRule",
+   "Properties": {
+    "Rule": {
+     "Actions": [
+      {
+       "LambdaAction": {
+        "FunctionArn": {
+         "Fn::GetAtt": [
+          "ComputeIntakeAgentFn5735C66F",
+          "Arn"
+         ]
+        }
+       }
+      }
+     ],
+     "Enabled": true,
+     "Recipients": [
+      "claims@dev.claims-portal.example.com"
+     ]
+    },
+    "RuleSetName": {
+     "Ref": "ChannelsClaimEmailRuleSet435D92A2"
+    }
+   },
+   "DependsOn": [
+    "ComputeIntakeAgentFnAllowSes023552DA"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Channels/ClaimEmailRuleSet/InboundClaimEmail/Resource"
+   }
+  },
+  "MonitoringOperationalDashboard543D2A7D": {
+   "Type": "AWS::CloudWatch::Dashboard",
+   "Properties": {
+    "DashboardBody": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"widgets\":[{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":0,\"properties\":{\"view\":\"timeSeries\",\"title\":\"IntakeAgentFn - Invocations & Errors\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/Lambda\",\"Invocations\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeIntakeAgentFn5735C66F"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/Lambda\",\"Errors\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeIntakeAgentFn5735C66F"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":6,\"properties\":{\"view\":\"timeSeries\",\"title\":\"DamageAssessmentFn - Invocations & Errors\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/Lambda\",\"Invocations\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeDamageAssessmentFn9A4F4266"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/Lambda\",\"Errors\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeDamageAssessmentFn9A4F4266"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":12,\"properties\":{\"view\":\"timeSeries\",\"title\":\"FraudDetectionFn - Invocations & Errors\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/Lambda\",\"Invocations\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeFraudDetectionFn17A9CC54"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/Lambda\",\"Errors\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeFraudDetectionFn17A9CC54"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":18,\"properties\":{\"view\":\"timeSeries\",\"title\":\"EvaluateApprovalFn - Invocations & Errors\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/Lambda\",\"Invocations\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeEvaluateApprovalFnC4447566"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/Lambda\",\"Errors\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeEvaluateApprovalFnC4447566"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":24,\"properties\":{\"view\":\"timeSeries\",\"title\":\"RunPayoutFn - Invocations & Errors\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/Lambda\",\"Invocations\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeRunPayoutFnF67D2E22"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/Lambda\",\"Errors\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeRunPayoutFnF67D2E22"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":30,\"properties\":{\"view\":\"timeSeries\",\"title\":\"NotifyCustomerFn - Invocations & Errors\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/Lambda\",\"Invocations\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeNotifyCustomerFn3664C393"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/Lambda\",\"Errors\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputeNotifyCustomerFn3664C393"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":36,\"properties\":{\"view\":\"timeSeries\",\"title\":\"PortalApiFn - Invocations & Errors\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/Lambda\",\"Invocations\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputePortalApiFnFD0A436C"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/Lambda\",\"Errors\",\"FunctionName\",\"",
+       {
+        "Ref": "ComputePortalApiFnFD0A436C"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":42,\"properties\":{\"view\":\"timeSeries\",\"title\":\"ClaimLifecycleWorkflow - Executions\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/States\",\"ExecutionsStarted\",\"StateMachineArn\",\"",
+       {
+        "Ref": "OrchestrationClaimLifecycleWorkflow775A9864"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/States\",\"ExecutionsSucceeded\",\"StateMachineArn\",\"",
+       {
+        "Ref": "OrchestrationClaimLifecycleWorkflow775A9864"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/States\",\"ExecutionsFailed\",\"StateMachineArn\",\"",
+       {
+        "Ref": "OrchestrationClaimLifecycleWorkflow775A9864"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}],[\"AWS/States\",\"ExecutionsTimedOut\",\"StateMachineArn\",\"",
+       {
+        "Ref": "OrchestrationClaimLifecycleWorkflow775A9864"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":12,\"height\":6,\"x\":0,\"y\":48,\"properties\":{\"view\":\"timeSeries\",\"title\":\"DisputeResolutionWorkflow - Executions\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/States\",\"ExecutionsStarted\",\"StateMachineArn\",\"",
+       {
+        "Ref": "OrchestrationDisputeResolutionWorkflowE9C3FD75"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/States\",\"ExecutionsSucceeded\",\"StateMachineArn\",\"",
+       {
+        "Ref": "OrchestrationDisputeResolutionWorkflowE9C3FD75"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/States\",\"ExecutionsFailed\",\"StateMachineArn\",\"",
+       {
+        "Ref": "OrchestrationDisputeResolutionWorkflowE9C3FD75"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}],[\"AWS/States\",\"ExecutionsTimedOut\",\"StateMachineArn\",\"",
+       {
+        "Ref": "OrchestrationDisputeResolutionWorkflowE9C3FD75"
+       },
+       "\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}}]}"
+      ]
+     ]
+    },
+    "DashboardName": "claims-operations-dev"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/OperationalDashboard/Resource"
+   }
+  },
+  "MonitoringIntakeAgentFnErrorAlarm70226ED8": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda ",
+       {
+        "Ref": "ComputeIntakeAgentFn5735C66F"
+       },
+       " error rate exceeded threshold"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ComputeIntakeAgentFn5735C66F"
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/IntakeAgentFnErrorAlarm/Resource"
+   }
+  },
+  "MonitoringDamageAssessmentFnErrorAlarm7130A1CB": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda ",
+       {
+        "Ref": "ComputeDamageAssessmentFn9A4F4266"
+       },
+       " error rate exceeded threshold"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ComputeDamageAssessmentFn9A4F4266"
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/DamageAssessmentFnErrorAlarm/Resource"
+   }
+  },
+  "MonitoringFraudDetectionFnErrorAlarmD3342DEE": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda ",
+       {
+        "Ref": "ComputeFraudDetectionFn17A9CC54"
+       },
+       " error rate exceeded threshold"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ComputeFraudDetectionFn17A9CC54"
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/FraudDetectionFnErrorAlarm/Resource"
+   }
+  },
+  "MonitoringEvaluateApprovalFnErrorAlarm5420E75C": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda ",
+       {
+        "Ref": "ComputeEvaluateApprovalFnC4447566"
+       },
+       " error rate exceeded threshold"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ComputeEvaluateApprovalFnC4447566"
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/EvaluateApprovalFnErrorAlarm/Resource"
+   }
+  },
+  "MonitoringRunPayoutFnErrorAlarm8DE0FF8A": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda ",
+       {
+        "Ref": "ComputeRunPayoutFnF67D2E22"
+       },
+       " error rate exceeded threshold"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ComputeRunPayoutFnF67D2E22"
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/RunPayoutFnErrorAlarm/Resource"
+   }
+  },
+  "MonitoringNotifyCustomerFnErrorAlarm1FA6A98A": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda ",
+       {
+        "Ref": "ComputeNotifyCustomerFn3664C393"
+       },
+       " error rate exceeded threshold"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ComputeNotifyCustomerFn3664C393"
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/NotifyCustomerFnErrorAlarm/Resource"
+   }
+  },
+  "MonitoringPortalApiFnErrorAlarm06B350A2": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda ",
+       {
+        "Ref": "ComputePortalApiFnFD0A436C"
+       },
+       " error rate exceeded threshold"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ComputePortalApiFnFD0A436C"
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/PortalApiFnErrorAlarm/Resource"
+   }
+  },
+  "MonitoringClaimLifecycleWorkflowFailureAlarm74B65188": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "State machine ",
+       {
+        "Ref": "OrchestrationClaimLifecycleWorkflow775A9864"
+       },
+       " execution failed"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "StateMachineArn",
+      "Value": {
+       "Ref": "OrchestrationClaimLifecycleWorkflow775A9864"
+      }
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "ExecutionsFailed",
+    "Namespace": "AWS/States",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Threshold": 1,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/ClaimLifecycleWorkflowFailureAlarm/Resource"
+   }
+  },
+  "MonitoringDisputeResolutionWorkflowFailureAlarm085D01EE": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "State machine ",
+       {
+        "Ref": "OrchestrationDisputeResolutionWorkflowE9C3FD75"
+       },
+       " execution failed"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "StateMachineArn",
+      "Value": {
+       "Ref": "OrchestrationDisputeResolutionWorkflowE9C3FD75"
+      }
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "ExecutionsFailed",
+    "Namespace": "AWS/States",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Threshold": 1,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/DisputeResolutionWorkflowFailureAlarm/Resource"
+   }
+  },
+  "MonitoringClaimsTableThrottleAlarmA5394203": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "DynamoDB table ",
+       {
+        "Ref": "DatabaseClaimsTableDE5ED1CC"
+       },
+       " throttling detected"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "EvaluationPeriods": 2,
+    "Metrics": [
+     {
+      "Expression": "putitem + getitem + query",
+      "Id": "expr_1",
+      "Label": "Sum of throttled requests across all operations"
+     },
+     {
+      "Id": "putitem",
+      "MetricStat": {
+       "Metric": {
+        "Dimensions": [
+         {
+          "Name": "Operation",
+          "Value": "PutItem"
+         },
+         {
+          "Name": "TableName",
+          "Value": {
+           "Ref": "DatabaseClaimsTableDE5ED1CC"
+          }
+         }
+        ],
+        "MetricName": "ThrottledRequests",
+        "Namespace": "AWS/DynamoDB"
+       },
+       "Period": 300,
+       "Stat": "Sum"
+      },
+      "ReturnData": false
+     },
+     {
+      "Id": "getitem",
+      "MetricStat": {
+       "Metric": {
+        "Dimensions": [
+         {
+          "Name": "Operation",
+          "Value": "GetItem"
+         },
+         {
+          "Name": "TableName",
+          "Value": {
+           "Ref": "DatabaseClaimsTableDE5ED1CC"
+          }
+         }
+        ],
+        "MetricName": "ThrottledRequests",
+        "Namespace": "AWS/DynamoDB"
+       },
+       "Period": 300,
+       "Stat": "Sum"
+      },
+      "ReturnData": false
+     },
+     {
+      "Id": "query",
+      "MetricStat": {
+       "Metric": {
+        "Dimensions": [
+         {
+          "Name": "Operation",
+          "Value": "Query"
+         },
+         {
+          "Name": "TableName",
+          "Value": {
+           "Ref": "DatabaseClaimsTableDE5ED1CC"
+          }
+         }
+        ],
+        "MetricName": "ThrottledRequests",
+        "Namespace": "AWS/DynamoDB"
+       },
+       "Period": 300,
+       "Stat": "Sum"
+      },
+      "ReturnData": false
+     }
+    ],
+    "Threshold": 10,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/ClaimsTableThrottleAlarm/Resource"
+   }
+  },
+  "MonitoringAuditLogTableThrottleAlarm35CF911C": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmDescription": {
+     "Fn::Join": [
+      "",
+      [
+       "DynamoDB table ",
+       {
+        "Ref": "DatabaseAuditLogTable81583F1A"
+       },
+       " throttling detected"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "EvaluationPeriods": 2,
+    "Metrics": [
+     {
+      "Expression": "putitem + getitem + query",
+      "Id": "expr_1",
+      "Label": "Sum of throttled requests across all operations"
+     },
+     {
+      "Id": "putitem",
+      "MetricStat": {
+       "Metric": {
+        "Dimensions": [
+         {
+          "Name": "Operation",
+          "Value": "PutItem"
+         },
+         {
+          "Name": "TableName",
+          "Value": {
+           "Ref": "DatabaseAuditLogTable81583F1A"
+          }
+         }
+        ],
+        "MetricName": "ThrottledRequests",
+        "Namespace": "AWS/DynamoDB"
+       },
+       "Period": 300,
+       "Stat": "Sum"
+      },
+      "ReturnData": false
+     },
+     {
+      "Id": "getitem",
+      "MetricStat": {
+       "Metric": {
+        "Dimensions": [
+         {
+          "Name": "Operation",
+          "Value": "GetItem"
+         },
+         {
+          "Name": "TableName",
+          "Value": {
+           "Ref": "DatabaseAuditLogTable81583F1A"
+          }
+         }
+        ],
+        "MetricName": "ThrottledRequests",
+        "Namespace": "AWS/DynamoDB"
+       },
+       "Period": 300,
+       "Stat": "Sum"
+      },
+      "ReturnData": false
+     },
+     {
+      "Id": "query",
+      "MetricStat": {
+       "Metric": {
+        "Dimensions": [
+         {
+          "Name": "Operation",
+          "Value": "Query"
+         },
+         {
+          "Name": "TableName",
+          "Value": {
+           "Ref": "DatabaseAuditLogTable81583F1A"
+          }
+         }
+        ],
+        "MetricName": "ThrottledRequests",
+        "Namespace": "AWS/DynamoDB"
+       },
+       "Period": 300,
+       "Stat": "Sum"
+      },
+      "ReturnData": false
+     }
+    ],
+    "Threshold": 10,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/Monitoring/AuditLogTableThrottleAlarm/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/21S227bMAz9lr6rWtaiH+Cm2DBswYJkwx4DRmZt1bJoiFSCTPC/D5KT5rI+8ZxDSiSP9KA/P8307A72fG/q7t7ZrU5rAdMp2PMmdT3r9B0Pav7qc6icBc6kgFFZ6HVagIcG6yU5a0rltbAih1kt8Vw0oVHVBw891VudfsF2qixgVPyo03M0HUoWj2gK52uu+ESegXFUDvptDTp9id6IJZ+LL/ESQ2+ZLfncaQPMKKyrHJShxlshnX4zhiWRywfe8QnMnUUvl6n/la+B4jAqFhxej81Zpz9gRS2BWc1bsgbVWkBwAaa1vjhwyW9ObwS4Y/2jrPfN76hDBYNtQHAPB51WyFINtjh+hpUxFL2oFxwcHfrjlBdsLdCcWjeoVsgUg8HspVqgtFSXl53QKXtscsSTaafNuYrSUrB/MZQB3tmoGDnPadAOsooO19ML3ygX9CY7KuMo1nsQ0+r0AtxuCUIZ8EwqB6GfviqEfhyvhv4ZZYii5pGF+o+3uUotA+1sjaHYUf5Itsn6ZlSeatRv/Gn38KQf9ezuja29D9GL7VGvpvgPzGC9xWcDAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "claims-dev/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "EncryptionAuditImmutabilityPolicyArnBB9D5235": {
+   "Description": "Attach this policy to enforce AuditLog immutability",
+   "Value": {
+    "Ref": "EncryptionDenyAuditMutation9974686D"
+   }
+  },
+  "ApiPortalApiEndpointEF575B1B": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ApiPortalApiC147ED77"
+      },
+      ".execute-api.eu-central-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ApiPortalApiDeploymentStagedev8AD6A08E"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "ApiApiUrlF2D81078": {
+   "Description": "Customer Portal API URL",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ApiPortalApiC147ED77"
+      },
+      ".execute-api.eu-central-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ApiPortalApiDeploymentStagedev8AD6A08E"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "UserPoolId": {
+   "Value": {
+    "Ref": "AuthCustomerUserPool4132CEB7"
+   }
+  },
+  "UserPoolClientId": {
+   "Value": {
+    "Ref": "AuthCustomerUserPoolPortalAppClient4312C81A"
+   }
+  },
+  "ClaimsTableName": {
+   "Value": {
+    "Ref": "DatabaseClaimsTableDE5ED1CC"
+   }
+  },
+  "AuditLogTableName": {
+   "Value": {
+    "Ref": "DatabaseAuditLogTable81583F1A"
+   }
+  },
+  "PhotosBucketName": {
+   "Value": {
+    "Ref": "StorageDamagePhotosBucket43047573"
+   }
+  },
+  "DocumentsBucketName": {
+   "Value": {
+    "Ref": "StorageClaimDocumentsBucket7249398B"
+   }
+  },
+  "ClaimLifecycleStateMachineArn": {
+   "Value": {
+    "Ref": "OrchestrationClaimLifecycleWorkflow775A9864"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
