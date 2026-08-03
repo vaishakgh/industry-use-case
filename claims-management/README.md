@@ -19,81 +19,114 @@ The system lets customers report a claim through voice, email, or chat, with an 
 The diagram below shows how the three intake channels, the five subsystems, evidence storage, the audit trail, and the human review roles all connect, as defined in the design document.
 
 ```mermaid
-flowchart TB
-    subgraph Channels["Intake Channels"]
-        Voice["Voice (Amazon Connect)"]
-        Email["Email (SES)"]
-        Chat["Chat (Amplify Web/Chat Widget)"]
+flowchart LR
+
+    %% ─── LAYER 1: Intake Channels ───────────────────────────────
+    subgraph Channels["1. Intake Channels"]
+        direction TB
+        Voice["Voice\n(Amazon Connect)"]
+        Email["Email\n(SES)"]
+        Chat["Chat\n(Web Widget)"]
     end
 
+    %% ─── LAYER 2: Transcription ─────────────────────────────────
     Transcribe["Amazon Transcribe"]
 
-    subgraph Agent["FNOL Intake Agent"]
-        AgentCoreRuntime["Bedrock AgentCore Runtime\n(claims intake agent)"]
-        AgentCoreMemory["Bedrock AgentCore Memory\n(Claim_Session context)"]
+    %% ─── LAYER 3: FNOL Intake Agent ─────────────────────────────
+    subgraph Agent["2. FNOL Intake Agent"]
+        direction TB
+        AgentCoreRuntime["Bedrock AgentCore\nRuntime"]
+        AgentCoreMemory["Bedrock AgentCore\nMemory"]
+        AgentCoreRuntime <--> AgentCoreMemory
     end
 
-    Voice --> Transcribe --> AgentCoreRuntime
+    %% ─── LAYER 4: Claims Orchestrator ───────────────────────────
+    subgraph Orchestrator["3. Claims Orchestrator"]
+        direction TB
+        StepFunctions["AWS Step Functions\n(Claim Lifecycle)"]
+    end
+
+    %% ─── LAYER 5: Processing Services ───────────────────────────
+    subgraph Processing["4. Processing Services"]
+        direction TB
+        DamageLambda["Damage Assessment\nLambda"]
+        FraudLambda["Fraud Detection\nLambda"]
+        PayoutLambda["Payout\nLambda"]
+        NotifyLambda["Notify Customer\nLambda"]
+    end
+
+    %% ─── LAYER 6: Data & Storage ────────────────────────────────
+    subgraph Storage["5. Data Layer"]
+        direction TB
+        ClaimsTable[("DynamoDB\nClaims Table")]
+        AuditTable[("DynamoDB\nAudit Log")]
+        S3Photos[("S3\ndamage-photos")]
+        S3Docs[("S3\nclaim-documents")]
+    end
+
+    %% ─── LAYER 7: Customer Portal ───────────────────────────────
+    subgraph Portal["6. Customer Portal"]
+        direction TB
+        AmplifyFrontend["Amplify Frontend\n(React SPA)"]
+        Cognito["Amazon Cognito"]
+        PortalAPI["API Gateway\n+ Lambda"]
+    end
+
+    %% ─── LAYER 8: Human Roles ───────────────────────────────────
+    subgraph Humans["7. Human Review"]
+        direction TB
+        HumanAdjuster["Human Adjuster"]
+        FraudAnalyst["Fraud Analyst"]
+        ComplianceOfficer["Compliance Officer"]
+    end
+
+    %% ─── LAYER 9: Encryption ────────────────────────────────────
+    KMS["AWS KMS\n(CMKs per data class)"]
+
+    %% ─── FLOW: Channels → Agent ─────────────────────────────────
+    Voice --> Transcribe
+    Transcribe --> AgentCoreRuntime
     Email --> AgentCoreRuntime
     Chat --> AgentCoreRuntime
-    AgentCoreRuntime <--> AgentCoreMemory
 
-    AgentCoreRuntime -->|create/update Claim| ClaimsTable[(DynamoDB\nClaims Table)]
-    AgentCoreRuntime -->|SendTaskSuccess/Failure| Orchestrator
+    %% ─── FLOW: Agent → Orchestrator + Data ──────────────────────
+    AgentCoreRuntime -->|"create/update\nClaim"| ClaimsTable
+    AgentCoreRuntime -->|"SendTaskSuccess"| StepFunctions
 
-    subgraph Evidence["Evidence Handling"]
-        S3Photos[(S3: damage-photos)]
-        S3Docs[(S3: claim-documents)]
-        Rekognition["Amazon Rekognition"]
-        DamageLambda["Damage Assessment\nLambda"]
-    end
+    %% ─── FLOW: Orchestrator → Services ──────────────────────────
+    StepFunctions -->|"invoke"| DamageLambda
+    StepFunctions -->|"invoke"| FraudLambda
+    StepFunctions -->|"invoke"| PayoutLambda
+    StepFunctions -->|"invoke"| NotifyLambda
 
-    S3Photos --> DamageLambda --> Rekognition
-    DamageLambda -->|SendTaskSuccess/Failure| Orchestrator
-    DamageLambda --> ClaimsTable
+    %% ─── FLOW: Services → Data ──────────────────────────────────
+    DamageLambda -->|"severity +\ncost"| ClaimsTable
+    DamageLambda -->|"analyze"| S3Photos
+    FraudLambda -->|"fraud flag"| ClaimsTable
+    PayoutLambda -->|"status: Paid"| ClaimsTable
 
-    Orchestrator["AWS Step Functions\nClaims Orchestrator"]
-    FraudLambda["Fraud Detection\nLambda"]
-    PayoutLambda["Payout Lambda"]
-    AdjusterQueue[(DynamoDB\nReview Queue)]
+    %% ─── FLOW: Services → Audit ─────────────────────────────────
+    DamageLambda -->|"audit"| AuditTable
+    FraudLambda -->|"audit"| AuditTable
+    PayoutLambda -->|"audit"| AuditTable
 
-    Orchestrator --> FraudLambda --> ClaimsTable
-    Orchestrator --> PayoutLambda --> ClaimsTable
-    Orchestrator --> AdjusterQueue
-    Orchestrator --> AuditLambda["Audit Log Lambda"]
-    FraudLambda --> AuditLambda
-    DamageLambda --> AuditLambda
-    PayoutLambda --> AuditLambda
-    AgentCoreRuntime --> AuditLambda
-
-    AuditLambda --> AuditTable[(DynamoDB\nAudit Log, append-only)]
-
-    subgraph Portal["Customer Portal"]
-        AmplifyFrontend["Amplify Frontend\n(React SPA)"]
-        Cognito["Amazon Cognito\nUser Pool"]
-        PortalAPI["API Gateway + Lambda"]
-    end
-
+    %% ─── FLOW: Portal ───────────────────────────────────────────
     AmplifyFrontend --> Cognito
     AmplifyFrontend --> PortalAPI
-    PortalAPI --> ClaimsTable
-    PortalAPI --> S3Docs
-    PortalAPI --> AuditTable
-    PortalAPI -->|submit dispute| Orchestrator
+    PortalAPI -->|"read claims"| ClaimsTable
+    PortalAPI -->|"upload docs"| S3Docs
+    PortalAPI -->|"submit dispute"| StepFunctions
 
-    HumanAdjuster["Human Adjuster"]
-    FraudAnalyst["Fraud Analyst"]
-    ComplianceOfficer["Compliance Officer"]
+    %% ─── FLOW: Humans ───────────────────────────────────────────
+    HumanAdjuster -->|"review +\ndecide"| StepFunctions
+    FraudAnalyst -->|"review +\ndecide"| StepFunctions
+    ComplianceOfficer -->|"query"| AuditTable
 
-    HumanAdjuster -->|review, decide| AdjusterQueue
-    FraudAnalyst -->|review, decide| AdjusterQueue
-    ComplianceOfficer -->|query| AuditTable
-
-    KMS["AWS KMS\n(CMKs per data class)"]
-    KMS -.encrypts.- ClaimsTable
-    KMS -.encrypts.- AuditTable
-    KMS -.encrypts.- S3Photos
-    KMS -.encrypts.- S3Docs
+    %% ─── FLOW: Encryption ───────────────────────────────────────
+    KMS -.-|"encrypts"| ClaimsTable
+    KMS -.-|"encrypts"| AuditTable
+    KMS -.-|"encrypts"| S3Photos
+    KMS -.-|"encrypts"| S3Docs
 ```
 
 ---
@@ -166,147 +199,65 @@ sequenceDiagram
 
 ---
 
-## 4. Project Status
+## 4. Project Structure
 
-| Phase | Status |
-|---|---|
-| 1 — Requirements | ✅ Complete (12 requirements, EARS format, detailed via parallel requirement review) |
-| 2 — Design | ✅ Complete (architecture, data models, state machines, 43 correctness properties) |
-| 3 — Tasks | ✅ Complete (141 sub-tasks, dependency graph — 108 application + 12 IaC + 18 integration + 3 checkpoints) |
-| 4 — Implementation (Application) | ✅ Complete (49 test suites, 287 tests passing) |
-| 5 — Infrastructure as Code (CDK) | ✅ Complete (24 CDK unit tests passing, `cdk synth` clean) |
-| 6 — Integration Tests | ✅ Complete (14 test files, skip-safe for environments without deployed stack) |
-| 7 — Deployment | ✅ Complete (deployed to `618257308782` / `eu-central-1`) |
-
-**Task plan:** [`spec/tasks.md`](./spec/tasks.md) · **Design:** [`spec/design.md`](./spec/design.md) · **Requirements:** [`spec/requirements.md`](./spec/requirements.md)
-
-**All 141 implementation tasks complete (100%). Deployment pending.**
-
-| # | Section | Sub-tasks Done | Status |
-|---|---|---|---|
-| 1 | Project structure and shared foundations | 4 / 4 | ✅ Done |
-| 2 | Audit Log Service | 9 / 9 | ✅ Done |
-| 3 | Claims and Claim_Session data access layer | 5 / 5 | ✅ Done |
-| — | Checkpoint 4 — all tests pass | — | ✅ Done |
-| 5 | Shared evidence upload validation | 2 / 2 | ✅ Done |
-| 6 | FNOL Intake Agent — channel normalization and session continuity | 12 / 12 | ✅ Done |
-| 7 | FNOL Intake Agent — structured field extraction and clarification | 11 / 11 | ✅ Done |
-| — | Checkpoint 8 — all tests pass | — | ✅ Done |
-| 9 | Damage Assessment Service | 7 / 7 | ✅ Done |
-| 10 | Fraud Detection Service | 10 / 10 | ✅ Done |
-| — | Checkpoint 11 — all tests pass | — | ✅ Done |
-| 12 | Claims Orchestrator lifecycle and approval logic | 14 / 14 | ✅ Done |
-| — | Checkpoint 13 — all tests pass | — | ✅ Done |
-| 14 | Dispute Resolution workflow | 9 / 9 | ✅ Done |
-| 15 | Customer Portal authentication and session management | 6 / 6 | ✅ Done |
-| 16 | Customer Portal claim access, document upload, and PII authorization | 7 / 7 | ✅ Done |
-| — | Checkpoint 17 — final, all tests pass | — | ✅ Done |
-| 18 | Customer Portal frontend (Amplify SPA) | 12 / 12 | ✅ Done |
-| — | Checkpoint 19 — final frontend, all tests pass | — | ✅ Done |
-| 20 | Infrastructure as Code (AWS CDK) | 12 / 12 | ✅ Done |
-| 21 | Integration Tests | 18 / 18 | ✅ Done |
-| — | Checkpoint 22 — CDK synth + integration tests pass | — | ✅ Done |
-
-### Deployment Target
-
-| Setting | Value |
-|---|---|
-| AWS Account | `618257308782` |
-| Region | `eu-central-1` |
-| Stage | `dev` |
-| Stack Name | `claims-dev` |
-
-### How to Deploy
-
-```bash
-cd infra
-npx cdk bootstrap aws://618257308782/eu-central-1   # one-time
-npx cdk deploy --context stage=dev --require-approval never
 ```
-
-### How to Run Integration Tests (post-deploy)
-
-```bash
-cd tests/integration
-npm install
-# Set environment variables from CDK stack outputs, then:
-npm test
+claims-management/
+├── .kiro/                          # Kiro spec-driven workflow config
+│   └── claims-management-fnol/
+│       ├── governance/             # Initial prompt + governance requirements
+│       └── specs/                  # Spec config
+├── backend/services/               # Backend monorepo (npm workspaces)
+│   ├── audit-log/                  # Append-only decision audit trail
+│   ├── damage-assessment/          # Rekognition-based photo analysis
+│   ├── fraud-detection/            # Fraud screening service
+│   ├── intake-agent/               # FNOL Intake Agent (Bedrock AgentCore)
+│   ├── orchestrator/               # Claims lifecycle (Step Functions)
+│   ├── portal/                     # Customer Portal backend
+│   └── shared/                     # Shared domain types + utilities
+├── frontend/                       # Customer Portal (Amplify React SPA)
+├── infra/                          # AWS CDK v2 Infrastructure as Code
+├── tests/integration/              # End-to-end integration tests
+├── postman/                        # Postman API collection
+├── output/                         # Demo output, screenshots & results
+└── spec/                           # Spec-driven workflow artifacts
 ```
 
 ---
 
-## 5. Session Log
+## 5. Specs
 
-## ━━━ Phase 1 — Requirements ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-### 📝 Requirements-First Workflow
-
-Generated `requirements.md` from the initial project description (omnichannel intake, damage assessment, fraud screening, lifecycle orchestration, audit logging, customer portal, dispute/appeals) plus a governance-provided draft requirements document. Reconciled gaps between the two: added customer notification on terminal claim status, a dedicated Data Protection and Encryption requirement, and a photo-resubmission step before adjuster escalation.
-
-Each of the 12 requirements was then independently detailed in parallel — tightening EARS wording, adding bounded retry/escalation criteria, and closing edge cases (e.g., ambiguous policy-number matches, rejected field confirmations, dispute reason validation).
-
-**Artifacts:** [`spec/requirements.md`](./spec/requirements.md) · [`.kiro/claims-management-fnol/governance/`](./.kiro/claims-management-fnol/governance/) (initial prompt + governance draft)
+| Document | Description |
+|---|---|
+| [`spec/requirements.md`](./spec/requirements.md) | 12 EARS-format requirements covering omnichannel intake, damage assessment, fraud detection, lifecycle orchestration, audit logging, customer portal, dispute resolution, and data protection |
+| [`spec/design.md`](./spec/design.md) | Architecture, data models, state machines, key decisions, and 43 correctness properties |
+| [`spec/tasks.md`](./spec/tasks.md) | 141 implementation tasks with dependency graph (all complete) |
 
 ---
 
-## ━━━ Phase 2 — Design ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 6. Code
 
-### 📐 Design Workflow
-
-Produced a full architecture document covering all five subsystems, a system context diagram, key architectural decisions (AgentCore Runtime + Memory for session continuity, Step Functions with `waitForTaskToken` for human-in-the-loop stages, synchronous audit-write-precedes-effect enforcement, DynamoDB conditional writes for immutability), data models aligned to the requirements glossary, and error-handling strategy.
-
-**Key decisions:**
-- Mirror `Claim_Session` state into DynamoDB (GSI on policy number + status) since AgentCore Memory alone isn't queryable by policy number
-- Model the claim lifecycle as a single Step Functions Standard workflow per claim; disputes get their own short-lived workflow
-- Every decision-producing Lambda calls the Audit Log Service synchronously and only proceeds if the write succeeds (Requirement 8.6 fail-safe)
-
-Formalized **43 correctness properties** for property-based testing, each tagged to its validating requirement(s), with infrastructure-only concerns (KMS/TLS wiring, Cognito authorizer presence) explicitly routed to integration/smoke tests instead.
-
-**Artifacts:** [`spec/design.md`](./spec/design.md)
+| Component | Location | Description |
+|---|---|---|
+| Backend Services | [`backend/services/`](./backend/services/) | 7 TypeScript/Node.js Lambda packages (audit-log, damage-assessment, fraud-detection, intake-agent, orchestrator, portal, shared) |
+| Frontend | [`frontend/`](./frontend/) | Amplify React SPA (login, dashboard, claim detail, document upload, dispute form) |
+| Infrastructure | [`infra/`](./infra/) | AWS CDK v2 stack (DynamoDB, S3, Cognito, Lambda, Step Functions, API Gateway, KMS, CloudWatch) |
+| Postman Collection | [`postman/Claims-Management-API.postman_collection.json`](./postman/Claims-Management-API.postman_collection.json) | API endpoints + Step Functions test scenarios |
 
 ---
 
-## ━━━ Phase 3 — Tasks ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 7. Output & Results
 
-### 🗂️ Tasks Workflow
-
-Broke the design into 108 implementation/test sub-tasks across 19 top-level groups (foundations, Audit Log Service, Claims/ClaimSession data layer, shared upload validation, Intake Agent ×2, Damage Assessment, Fraud Detection, Claims Orchestrator, Dispute Resolution, Customer Portal ×3), with 5 checkpoints and all 43 property tests wired in as optional test sub-tasks directly after their implementation task. Generated a 26-wave task dependency graph reflecting cross-package build order. A Customer Portal frontend section (18: Amplify SPA — login, dashboard, claim detail, document upload, dispute form) was added afterward once the user asked about frontend scope, tied to design.md's expanded Customer Portal frontend architecture, extending the plan to 29 waves.
-
-**Artifacts:** [`spec/tasks.md`](./spec/tasks.md)
-
----
-
-## ━━━ Phase 4 — Implementation ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-### ⚙️ Task Execution
-
-**Sections 1–3, 5 — Foundations, Audit Log Service, Claims/ClaimSession data layer, upload validation** ✅ Complete
-- Monorepo scaffolding (npm workspaces, TypeScript project references, Jest + fast-check, ESLint)
-- Shared domain types/enums and a validated `SystemConfig` loader
-- Append-only Audit Log Service: DynamoDB access layer with conditional writes, `recordAutomatedDecision`, the audit-write-precedes-effect wrapper (`Claims.AuditFailure` on any write failure), and a compliance-officer-gated query API
-- Claims and ClaimSessions DynamoDB access layers, ULID-based claim ID generation with collision retry, atomic status-history append
-- Shared upload validator (format/size) reused by both photo and document uploads
-- Checkpoint 4 passed: full build, test, and lint clean
-
-**Section 6 — FNOL Intake Agent (channel/session)** 🔄 In progress
-- `ChannelMessage` normalization for Voice/Email/Chat adapters implemented
-- Remaining: confidence-based voice confirmation, unparseable-content handling, session lookup/resume logic, and associated property tests
-
-**Section 10 — Fraud Detection Service** 🔄 In progress
-- Claim frequency check and a mocked watchlist/sanctions screening client implemented
-- Remaining: timeline discrepancy check, fraud flag aggregation, analyst review handler, audit wiring
-
-**Section 15 — Customer Portal authentication** 🔄 In progress
-- Cognito authentication integration with a generic, non-leaking invalid-credential message implemented
-- Remaining: account lockout tracking, session idle-timeout enforcement, associated property tests
-
-A property-based test flake (fast-check's `fc.date()` generating an occasional Invalid Date, causing `.toISOString()` to throw) was diagnosed and fixed with `noInvalidDate: true` across affected property tests.
-
-**Artifacts:** [`spec/tasks.md`](./spec/tasks.md) (live checkbox tracker) · [`backend/services/`](./backend/services/) (implementation)
+| Document | Description |
+|---|---|
+| [`output/project-status/project-status.md`](./output/project-status/project-status.md) | Overall project status, task completion, deployment target |
+| [`output/session-log/session-log.md`](./output/session-log/session-log.md) | Detailed session log of the spec-driven development process |
+| [`output/step-functions/step-functions-scenarios.md`](./output/step-functions/step-functions-scenarios.md) | 4 Step Functions test scenarios with DynamoDB results and screenshots |
+| [`tests/integration/`](./tests/integration/) | 18 integration test suites validating the deployed stack |
 
 ---
 
-## 6. Getting Started
+## 8. Getting Started
 
 ```bash
 npm install       # install dependencies at the repo root
@@ -314,9 +265,3 @@ npm run build     # tsc -b across all backend packages
 npm test          # jest, runs against backend/services
 npm run lint      # eslint
 ```
-
----
-
-## Attribution
-
-This README structure is modeled after [vaishakgh/spec-driven-development](https://github.com/vaishakgh/spec-driven-development/tree/main/brownfield-implementation).

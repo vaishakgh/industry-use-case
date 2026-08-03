@@ -1,9 +1,456 @@
 {
   "info": {
+    "_postman_id": "fe47c1ef-2096-4491-a47d-63dae5a6ce30",
     "name": "Claims Management API",
     "description": "Claims Management and FNOL System - Customer Portal API and Step Functions",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15850487"
   },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get Token (copy IdToken from response)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var response = pm.response.json();\r",
+                  "var idToken = response.AuthenticationResult.IdToken;\r",
+                  "pm.collectionVariables.set(\"token\", idToken);\r",
+                  "console.log(\"Token refreshed, expires in: \" + response.AuthenticationResult.ExpiresIn + \"s\");\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-amz-json-1.1"
+              },
+              {
+                "key": "X-Amz-Target",
+                "value": "AWSCognitoIdentityProviderService.InitiateAuth"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AuthFlow\": \"USER_PASSWORD_AUTH\",\n  \"ClientId\": \"78s7503h9ug86ueg1a9icbhe9m\",\n  \"AuthParameters\": {\n    \"USERNAME\": \"testcustomer\",\n    \"PASSWORD\": \"Claims!Test123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "https://cognito-idp.eu-central-1.amazonaws.com",
+              "protocol": "https",
+              "host": [
+                "cognito-idp",
+                "eu-central-1",
+                "amazonaws",
+                "com"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Claims API",
+      "item": [
+        {
+          "name": "GET /claims - List all claims",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/claims",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "claims"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /claims/{id} - Claim detail + status history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/claims/CLM-NORMAL-001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "claims",
+                "CLM-NORMAL-001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /claims/{id}/documents - Upload document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filename\": \"evidence.pdf\",\n  \"sizeBytes\": 2048\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/claims/CLM-001/documents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "claims",
+                "CLM-001",
+                "documents"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /claims/{id}/disputes - Submit dispute (valid)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"The damage was pre-existing and not caused by the reported incident. I have photos from before the event.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/claims/CLM-001/disputes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "claims",
+                "CLM-001",
+                "disputes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /claims/{id}/disputes - Empty reason (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/claims/CLM-001/disputes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "claims",
+                "CLM-001",
+                "disputes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /claims - No auth (should 401)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/claims",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "claims"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Step Functions",
+      "item": [
+        {
+          "name": "Start Normal Claim (auto-approve)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-amz-json-1.0"
+              },
+              {
+                "key": "X-Amz-Target",
+                "value": "AWSStepFunctions.StartExecution"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stateMachineArn\": \"{{stateMachineArn}}\",\n  \"name\": \"postman-normal-{{$timestamp}}\",\n  \"input\": \"{\\\"claimId\\\":\\\"CLM-NORMAL-001\\\",\\\"policyNumber\\\":\\\"POL-555\\\",\\\"priorClaimCount\\\":1}\"\n}"
+            },
+            "url": {
+              "raw": "https://states.eu-central-1.amazonaws.com",
+              "protocol": "https",
+              "host": [
+                "states",
+                "eu-central-1",
+                "amazonaws",
+                "com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Start Fraud Claim (high frequency)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-amz-json-1.0"
+              },
+              {
+                "key": "X-Amz-Target",
+                "value": "AWSStepFunctions.StartExecution"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stateMachineArn\": \"{{stateMachineArn}}\",\n  \"name\": \"postman-fraud-{{$timestamp}}\",\n  \"input\": \"{\\\"claimId\\\":\\\"CLM-FRAUD-001\\\",\\\"policyNumber\\\":\\\"POL-666\\\",\\\"priorClaimCount\\\":5}\"\n}"
+            },
+            "url": {
+              "raw": "https://states.eu-central-1.amazonaws.com",
+              "protocol": "https",
+              "host": [
+                "states",
+                "eu-central-1",
+                "amazonaws",
+                "com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Start Timeline Discrepancy Claim",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-amz-json-1.0"
+              },
+              {
+                "key": "X-Amz-Target",
+                "value": "AWSStepFunctions.StartExecution"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stateMachineArn\": \"{{stateMachineArn}}\",\n  \"name\": \"postman-timeline-{{$timestamp}}\",\n  \"input\": \"{\\\"claimId\\\":\\\"CLM-TIMELINE-001\\\",\\\"policyNumber\\\":\\\"POL-777\\\",\\\"incidentDate\\\":\\\"2026-08-15T00:00:00Z\\\",\\\"claimCreatedDate\\\":\\\"2026-07-28T00:00:00Z\\\"}\"\n}"
+            },
+            "url": {
+              "raw": "https://states.eu-central-1.amazonaws.com",
+              "protocol": "https",
+              "host": [
+                "states",
+                "eu-central-1",
+                "amazonaws",
+                "com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Start HighCost Discrepancy Claim",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-amz-json-1.0"
+              },
+              {
+                "key": "X-Amz-Target",
+                "value": "AWSStepFunctions.StartExecution"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stateMachineArn\": \"{{stateMachineArn}}\",\n  \"name\": \"postman-highcost-{{$timestamp}}\",\n  \"input\": \"{\\\"claimId\\\":\\\"CLM-HIGHCOST-001\\\",\\\"policyNumber\\\":\\\"POL-400\\\",\\\"priorClaimCount\\\":1,\\\"estimatedRepairCost\\\":5000}\"\n}"
+            },
+            "url": {
+              "raw": "https://states.eu-central-1.amazonaws.com",
+              "protocol": "https",
+              "host": [
+                "states",
+                "eu-central-1",
+                "amazonaws",
+                "com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Describe Execution (check status)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-amz-json-1.0"
+              },
+              {
+                "key": "X-Amz-Target",
+                "value": "AWSStepFunctions.DescribeExecution"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"executionArn\": \"arn:aws:states:eu-central-1:618257308782:execution:claims-claim-lifecycle-dev:postman-normal-001\"\n}"
+            },
+            "url": {
+              "raw": "https://states.eu-central-1.amazonaws.com",
+              "protocol": "https",
+              "host": [
+                "states",
+                "eu-central-1",
+                "amazonaws",
+                "com"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "awsv4",
+        "awsv4": [
+          {
+            "key": "secretKey",
+            "value": "{{awsSecretKey}}",
+            "type": "string"
+          },
+          {
+            "key": "accessKey",
+            "value": "{{awsAccessKey}}",
+            "type": "string"
+          },
+          {
+            "key": "service",
+            "value": "states",
+            "type": "string"
+          },
+          {
+            "key": "region",
+            "value": "eu-central-1",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
   "variable": [
     {
       "key": "baseUrl",
@@ -20,245 +467,6 @@
     {
       "key": "stateMachineArn",
       "value": "arn:aws:states:eu-central-1:618257308782:stateMachine:claims-claim-lifecycle-dev"
-    }
-  ],
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{token}}",
-        "type": "string"
-      }
-    ]
-  },
-  "item": [
-    {
-      "name": "Authentication",
-      "item": [
-        {
-          "name": "Get Token (copy IdToken from response)",
-          "request": {
-            "auth": { "type": "noauth" },
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/x-amz-json-1.1" },
-              { "key": "X-Amz-Target", "value": "AWSCognitoIdentityProviderService.InitiateAuth" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"AuthFlow\": \"USER_PASSWORD_AUTH\",\n  \"ClientId\": \"78s7503h9ug86ueg1a9icbhe9m\",\n  \"AuthParameters\": {\n    \"USERNAME\": \"testcustomer\",\n    \"PASSWORD\": \"Claims!Test123\"\n  }\n}"
-            },
-            "url": {
-              "raw": "https://cognito-idp.eu-central-1.amazonaws.com",
-              "protocol": "https",
-              "host": ["cognito-idp", "eu-central-1", "amazonaws", "com"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Claims API",
-      "item": [
-        {
-          "name": "GET /claims - List all claims",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/claims",
-              "host": ["{{baseUrl}}"],
-              "path": ["claims"]
-            }
-          }
-        },
-        {
-          "name": "GET /claims/{id} - Claim detail + status history",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/claims/CLM-001",
-              "host": ["{{baseUrl}}"],
-              "path": ["claims", "CLM-001"]
-            }
-          }
-        },
-        {
-          "name": "POST /claims/{id}/documents - Upload document",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"filename\": \"evidence.pdf\",\n  \"sizeBytes\": 2048\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/claims/CLM-001/documents",
-              "host": ["{{baseUrl}}"],
-              "path": ["claims", "CLM-001", "documents"]
-            }
-          }
-        },
-        {
-          "name": "POST /claims/{id}/disputes - Submit dispute (valid)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"reason\": \"The damage was pre-existing and not caused by the reported incident. I have photos from before the event.\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/claims/CLM-001/disputes",
-              "host": ["{{baseUrl}}"],
-              "path": ["claims", "CLM-001", "disputes"]
-            }
-          }
-        },
-        {
-          "name": "POST /claims/{id}/disputes - Empty reason (400)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"reason\": \"\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/claims/CLM-001/disputes",
-              "host": ["{{baseUrl}}"],
-              "path": ["claims", "CLM-001", "disputes"]
-            }
-          }
-        },
-        {
-          "name": "GET /claims - No auth (should 401)",
-          "request": {
-            "auth": { "type": "noauth" },
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/claims",
-              "host": ["{{baseUrl}}"],
-              "path": ["claims"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Step Functions",
-      "item": [
-        {
-          "name": "Start Normal Claim (auto-approve)",
-          "request": {
-            "auth": {
-              "type": "awsv4",
-              "awsv4": [
-                { "key": "region", "value": "eu-central-1", "type": "string" },
-                { "key": "service", "value": "states", "type": "string" }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/x-amz-json-1.0" },
-              { "key": "X-Amz-Target", "value": "AWSStepFunctions.StartExecution" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"stateMachineArn\": \"{{stateMachineArn}}\",\n  \"name\": \"postman-normal-001\",\n  \"input\": \"{\\\"claimId\\\":\\\"CLM-NORMAL-001\\\",\\\"policyNumber\\\":\\\"POL-555\\\",\\\"priorClaimCount\\\":1}\"\n}"
-            },
-            "url": {
-              "raw": "https://states.eu-central-1.amazonaws.com",
-              "protocol": "https",
-              "host": ["states", "eu-central-1", "amazonaws", "com"]
-            }
-          }
-        },
-        {
-          "name": "Start Fraud Claim (high frequency)",
-          "request": {
-            "auth": {
-              "type": "awsv4",
-              "awsv4": [
-                { "key": "region", "value": "eu-central-1", "type": "string" },
-                { "key": "service", "value": "states", "type": "string" }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/x-amz-json-1.0" },
-              { "key": "X-Amz-Target", "value": "AWSStepFunctions.StartExecution" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"stateMachineArn\": \"{{stateMachineArn}}\",\n  \"name\": \"postman-fraud-001\",\n  \"input\": \"{\\\"claimId\\\":\\\"CLM-FRAUD-001\\\",\\\"policyNumber\\\":\\\"POL-666\\\",\\\"priorClaimCount\\\":5}\"\n}"
-            },
-            "url": {
-              "raw": "https://states.eu-central-1.amazonaws.com",
-              "protocol": "https",
-              "host": ["states", "eu-central-1", "amazonaws", "com"]
-            }
-          }
-        },
-        {
-          "name": "Start Timeline Discrepancy Claim",
-          "request": {
-            "auth": {
-              "type": "awsv4",
-              "awsv4": [
-                { "key": "region", "value": "eu-central-1", "type": "string" },
-                { "key": "service", "value": "states", "type": "string" }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/x-amz-json-1.0" },
-              { "key": "X-Amz-Target", "value": "AWSStepFunctions.StartExecution" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"stateMachineArn\": \"{{stateMachineArn}}\",\n  \"name\": \"postman-timeline-001\",\n  \"input\": \"{\\\"claimId\\\":\\\"CLM-TIMELINE-001\\\",\\\"policyNumber\\\":\\\"POL-777\\\",\\\"incidentDate\\\":\\\"2026-08-15T00:00:00Z\\\",\\\"claimCreatedDate\\\":\\\"2026-07-28T00:00:00Z\\\"}\"\n}"
-            },
-            "url": {
-              "raw": "https://states.eu-central-1.amazonaws.com",
-              "protocol": "https",
-              "host": ["states", "eu-central-1", "amazonaws", "com"]
-            }
-          }
-        },
-        {
-          "name": "Describe Execution (check status)",
-          "request": {
-            "auth": {
-              "type": "awsv4",
-              "awsv4": [
-                { "key": "region", "value": "eu-central-1", "type": "string" },
-                { "key": "service", "value": "states", "type": "string" }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/x-amz-json-1.0" },
-              { "key": "X-Amz-Target", "value": "AWSStepFunctions.DescribeExecution" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"executionArn\": \"arn:aws:states:eu-central-1:618257308782:execution:claims-claim-lifecycle-dev:postman-normal-001\"\n}"
-            },
-            "url": {
-              "raw": "https://states.eu-central-1.amazonaws.com",
-              "protocol": "https",
-              "host": ["states", "eu-central-1", "amazonaws", "com"]
-            }
-          }
-        }
-      ]
     }
   ]
 }

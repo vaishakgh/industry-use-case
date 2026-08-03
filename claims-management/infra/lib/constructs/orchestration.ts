@@ -103,16 +103,14 @@ export class OrchestrationConstruct extends Construct {
       comment: 'Deliver terminal-status notification via original channel',
     });
 
-    // Stage: AwaitFraudAnalystDecision (waitForTaskToken)
-    const awaitFraudAnalyst = new sfn.Wait(this, 'AwaitFraudAnalystDecision', {
-      time: sfn.WaitTime.duration(cdk.Duration.seconds(1)),
-      comment: 'Placeholder for waitForTaskToken - Fraud Analyst sends task success with decision',
+    // Stage: AwaitFraudAnalystDecision (terminal in dev, waitForTaskToken in prod)
+    const awaitFraudAnalyst = new sfn.Succeed(this, 'AwaitFraudAnalystDecision', {
+      comment: 'Claim fraud-flagged — suspended pending Fraud Analyst review. In production this is a waitForTaskToken.',
     });
 
-    // Stage: AwaitAdjusterDecision (waitForTaskToken)
-    const awaitAdjuster = new sfn.Wait(this, 'AwaitAdjusterDecision', {
-      time: sfn.WaitTime.duration(cdk.Duration.seconds(1)),
-      comment: 'Placeholder for waitForTaskToken - Human Adjuster sends task success with decision',
+    // Stage: AwaitAdjusterDecision (terminal in dev, waitForTaskToken in prod)
+    const awaitAdjuster = new sfn.Succeed(this, 'AwaitAdjusterDecision', {
+      comment: 'Claim routed to Human Adjuster for review. In production this is a waitForTaskToken.',
     });
 
     // Routing choice after EvaluateApproval
@@ -120,9 +118,9 @@ export class OrchestrationConstruct extends Construct {
       .when(sfn.Condition.stringEquals('$.decision', 'approved'),
         runPayout.next(notifyCustomer))
       .when(sfn.Condition.stringEquals('$.decision', 'fraud_flagged'),
-        awaitFraudAnalyst.next(evaluateApproval))
+        awaitFraudAnalyst)
       .otherwise(
-        awaitAdjuster.next(notifyCustomer));
+        awaitAdjuster);
 
     // Chain the lifecycle
     const lifecycleDefinition = awaitIntake

@@ -1117,7 +1117,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-     "S3Key": "824b143f0df25bcb41b89557e48c7f66e759d9dfafab5797525ec095f3d119c0.zip"
+     "S3Key": "0de36b129086f7b88cb1005d0fb7375a470774a906e2b4bb9ed8a2929956116a.zip"
     },
     "Environment": {
      "Variables": {
@@ -1154,7 +1154,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "claims-dev/Compute/IntakeAgentFn/Resource",
-    "aws:asset:path": "asset.824b143f0df25bcb41b89557e48c7f66e759d9dfafab5797525ec095f3d119c0",
+    "aws:asset:path": "asset.0de36b129086f7b88cb1005d0fb7375a470774a906e2b4bb9ed8a2929956116a",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -1387,7 +1387,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-     "S3Key": "0fa3de55a444c52ca30ac37676147d88014f244323fedceffe4182de4160b494.zip"
+     "S3Key": "81e786de864c5a15331c71750600114cd7948d761f7e589ef84c46578a757926.zip"
     },
     "Environment": {
      "Variables": {
@@ -1424,7 +1424,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "claims-dev/Compute/DamageAssessmentFn/Resource",
-    "aws:asset:path": "asset.0fa3de55a444c52ca30ac37676147d88014f244323fedceffe4182de4160b494",
+    "aws:asset:path": "asset.81e786de864c5a15331c71750600114cd7948d761f7e589ef84c46578a757926",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -1581,7 +1581,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-     "S3Key": "477dc55ac109996092b4db0286c4c478acc02f2b0c5a21d5ca5854ab67cfb56c.zip"
+     "S3Key": "1c9f69c1244be7c17c72e5730aaffa5a6b6715f021d3dfef9aa73327a96e5b3e.zip"
     },
     "Environment": {
      "Variables": {
@@ -1615,7 +1615,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "claims-dev/Compute/FraudDetectionFn/Resource",
-    "aws:asset:path": "asset.477dc55ac109996092b4db0286c4c478acc02f2b0c5a21d5ca5854ab67cfb56c",
+    "aws:asset:path": "asset.1c9f69c1244be7c17c72e5730aaffa5a6b6715f021d3dfef9aa73327a96e5b3e",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -1918,7 +1918,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-     "S3Key": "952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85.zip"
+     "S3Key": "226d50ab534c46252b40231b3d9821cdde05b35b98de859a38972ee04ded8635.zip"
     },
     "Environment": {
      "Variables": {
@@ -1952,7 +1952,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "claims-dev/Compute/EvaluateApprovalFn/Resource",
-    "aws:asset:path": "asset.952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85",
+    "aws:asset:path": "asset.226d50ab534c46252b40231b3d9821cdde05b35b98de859a38972ee04ded8635",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -2099,7 +2099,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-     "S3Key": "952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85.zip"
+     "S3Key": "226d50ab534c46252b40231b3d9821cdde05b35b98de859a38972ee04ded8635.zip"
     },
     "Environment": {
      "Variables": {
@@ -2133,7 +2133,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "claims-dev/Compute/RunPayoutFn/Resource",
-    "aws:asset:path": "asset.952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85",
+    "aws:asset:path": "asset.226d50ab534c46252b40231b3d9821cdde05b35b98de859a38972ee04ded8635",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -2241,7 +2241,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-     "S3Key": "952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85.zip"
+     "S3Key": "226d50ab534c46252b40231b3d9821cdde05b35b98de859a38972ee04ded8635.zip"
     },
     "Environment": {
      "Variables": {
@@ -2275,7 +2275,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "claims-dev/Compute/NotifyCustomerFn/Resource",
-    "aws:asset:path": "asset.952ab034c13b81103f0aa872971772c95776fc8f386ee091320743794fc64e85",
+    "aws:asset:path": "asset.226d50ab534c46252b40231b3d9821cdde05b35b98de859a38972ee04ded8635",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -2484,7 +2484,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-     "S3Key": "2d3777811055b0b2d98e971d8379fc5754190b95b18cc3c3ac5a177076b24d76.zip"
+     "S3Key": "0076313ee4aa0f96557dd8c26e5170248459bc5fa12a52037cdf869c65a3a7b2.zip"
     },
     "Environment": {
      "Variables": {
@@ -2524,7 +2524,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "claims-dev/Compute/PortalApiFn/Resource",
-    "aws:asset:path": "asset.2d3777811055b0b2d98e971d8379fc5754190b95b18cc3c3ac5a177076b24d76",
+    "aws:asset:path": "asset.0076313ee4aa0f96557dd8c26e5170248459bc5fa12a52037cdf869c65a3a7b2",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -2615,7 +2615,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-     "S3Key": "2d3777811055b0b2d98e971d8379fc5754190b95b18cc3c3ac5a177076b24d76.zip"
+     "S3Key": "0076313ee4aa0f96557dd8c26e5170248459bc5fa12a52037cdf869c65a3a7b2.zip"
     },
     "Environment": {
      "Variables": {
@@ -2642,7 +2642,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "claims-dev/Compute/PreAuthenticationFn/Resource",
-    "aws:asset:path": "asset.2d3777811055b0b2d98e971d8379fc5754190b95b18cc3c3ac5a177076b24d76",
+    "aws:asset:path": "asset.0076313ee4aa0f96557dd8c26e5170248459bc5fa12a52037cdf869c65a3a7b2",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -3023,18 +3023,7 @@
          "Arn"
         ]
        },
-       "\",\"Payload.$\":\"$\"}},\"AwaitFraudAnalystDecision\":{\"Type\":\"Wait\",\"Comment\":\"Placeholder for waitForTaskToken - Fraud Analyst sends task success with decision\",\"Seconds\":1,\"Next\":\"EvaluateApproval\"},\"ApprovalRouting\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.decision\",\"StringEquals\":\"approved\",\"Next\":\"RunPayout\"},{\"Variable\":\"$.decision\",\"StringEquals\":\"fraud_flagged\",\"Next\":\"AwaitFraudAnalystDecision\"}],\"Default\":\"AwaitAdjusterDecision\"},\"AwaitAdjusterDecision\":{\"Type\":\"Wait\",\"Comment\":\"Placeholder for waitForTaskToken - Human Adjuster sends task success with decision\",\"Seconds\":1,\"Next\":\"NotifyCustomer\"},\"NotifyCustomer\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"Comment\":\"Deliver terminal-status notification via original channel\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
-       {
-        "Ref": "AWS::Partition"
-       },
-       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
-       {
-        "Fn::GetAtt": [
-         "ComputeNotifyCustomerFn3664C393",
-         "Arn"
-        ]
-       },
-       "\",\"Payload.$\":\"$\"}},\"RunPayout\":{\"Next\":\"NotifyCustomer\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2},{\"ErrorEquals\":[\"Claims.TransientFailure\",\"Lambda.ServiceException\",\"Lambda.TooManyRequestsException\"],\"IntervalSeconds\":5,\"MaxAttempts\":3,\"BackoffRate\":2}],\"Type\":\"Task\",\"Comment\":\"Initiate payment with claimId as idempotency key\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+       "\",\"Payload.$\":\"$\"}},\"ApprovalRouting\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.decision\",\"StringEquals\":\"approved\",\"Next\":\"RunPayout\"},{\"Variable\":\"$.decision\",\"StringEquals\":\"fraud_flagged\",\"Next\":\"AwaitFraudAnalystDecision\"}],\"Default\":\"AwaitAdjusterDecision\"},\"AwaitAdjusterDecision\":{\"Type\":\"Succeed\",\"Comment\":\"Claim routed to Human Adjuster for review. In production this is a waitForTaskToken.\"},\"RunPayout\":{\"Next\":\"NotifyCustomer\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2},{\"ErrorEquals\":[\"Claims.TransientFailure\",\"Lambda.ServiceException\",\"Lambda.TooManyRequestsException\"],\"IntervalSeconds\":5,\"MaxAttempts\":3,\"BackoffRate\":2}],\"Type\":\"Task\",\"Comment\":\"Initiate payment with claimId as idempotency key\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
        {
         "Ref": "AWS::Partition"
        },
@@ -3045,7 +3034,18 @@
          "Arn"
         ]
        },
-       "\",\"Payload.$\":\"$\"}},\"FraudCheckFailed\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"Pending_Adjuster_Review\",\"reason\":\"FraudCheckFailure\"},\"End\":true},\"DamageAssessmentFailed\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"Pending_Adjuster_Review\",\"reason\":\"DamageAssessmentFailure\"},\"End\":true}},\"TimeoutSeconds\":2592000}"
+       "\",\"Payload.$\":\"$\"}},\"NotifyCustomer\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"Comment\":\"Deliver terminal-status notification via original channel\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "ComputeNotifyCustomerFn3664C393",
+         "Arn"
+        ]
+       },
+       "\",\"Payload.$\":\"$\"}},\"AwaitFraudAnalystDecision\":{\"Type\":\"Succeed\",\"Comment\":\"Claim fraud-flagged — suspended pending Fraud Analyst review. In production this is a waitForTaskToken.\"},\"FraudCheckFailed\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"Pending_Adjuster_Review\",\"reason\":\"FraudCheckFailure\"},\"End\":true},\"DamageAssessmentFailed\":{\"Type\":\"Pass\",\"Result\":{\"status\":\"Pending_Adjuster_Review\",\"reason\":\"DamageAssessmentFailure\"},\"End\":true}},\"TimeoutSeconds\":2592000}"
       ]
      ]
     },
@@ -4984,7 +4984,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/21S227bMAz9lr6rWtaiH+Cm2DBswYJkwx4DRmZt1bJoiFSCTPC/D5KT5rI+8ZxDSiSP9KA/P8307A72fG/q7t7ZrU5rAdMp2PMmdT3r9B0Pav7qc6icBc6kgFFZ6HVagIcG6yU5a0rltbAih1kt8Vw0oVHVBw891VudfsF2qixgVPyo03M0HUoWj2gK52uu+ESegXFUDvptDTp9id6IJZ+LL/ESQ2+ZLfncaQPMKKyrHJShxlshnX4zhiWRywfe8QnMnUUvl6n/la+B4jAqFhxej81Zpz9gRS2BWc1bsgbVWkBwAaa1vjhwyW9ObwS4Y/2jrPfN76hDBYNtQHAPB51WyFINtjh+hpUxFL2oFxwcHfrjlBdsLdCcWjeoVsgUg8HspVqgtFSXl53QKXtscsSTaafNuYrSUrB/MZQB3tmoGDnPadAOsooO19ML3ygX9CY7KuMo1nsQ0+r0AtxuCUIZ8EwqB6GfviqEfhyvhv4ZZYii5pGF+o+3uUotA+1sjaHYUf5Itsn6ZlSeatRv/Gn38KQf9ezuja29D9GL7VGvpvgPzGC9xWcDAAA="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/21S227bMAz9lr6rWtaiH+Cm2DBswYJkwx4DRmZt1bJoiFSCTPC/D5KT5rI+8ZxDiqSO9KA/P8307A72fG/q7t7ZrU5rAdMp2PMmdT3r9B0Pav7qc6icBc6kgFFZ6HVagIcG6yU5a0rltbAih1kt8Vw0oVHVBw891VudfsF2qixgVPyo03M0HUoWj2gK5zZXfCLPwDgqB/22Bp2+RG/Eks/Fl3iJobfMlnyetAFmFNZVDspQ462QTr8Zw5LI5QPv+ATmzqKXy9T/ytdAcRgVCw6vx+Gs0x+wopbArNbRGMRazVuyBtVaQHABprW+OHHJb7psBLhj/aNc85vfUYcKBtuA4B4OOq2QpRpscf4MK2MoelEvODg69MdtL9haoDmNblCtkCkGg9lTtUBpqS4vPKFT9jjkiCfzTg5wFaWlYP9iKAu8s1Exct7ToB1kFR2up5e+US7oTXZUxlGs9yCm1ekFuN0ShLLgmVQOQj99WQj9OF4t/TPKEEXNIwv1H9/mKrUMtLM1hmJH+SvZJuubUXmqUb/xp93Dk37Us7s3tvY+RC+2R72a4j8nA1JvbwMAAA=="
    },
    "Metadata": {
     "aws:cdk:path": "claims-dev/CDKMetadata/Default"

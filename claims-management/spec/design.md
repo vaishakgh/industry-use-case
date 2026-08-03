@@ -26,81 +26,114 @@ All claim state lives in DynamoDB, all binary evidence (photos, documents) lives
 ### System Context Diagram
 
 ```mermaid
-flowchart TB
-    subgraph Channels["Intake Channels"]
-        Voice["Voice (Amazon Connect)"]
-        Email["Email (SES)"]
-        Chat["Chat (Amplify Web/Chat Widget)"]
+flowchart LR
+
+    %% ─── LAYER 1: Intake Channels ───────────────────────────────
+    subgraph Channels["1. Intake Channels"]
+        direction TB
+        Voice["Voice\n(Amazon Connect)"]
+        Email["Email\n(SES)"]
+        Chat["Chat\n(Web Widget)"]
     end
 
+    %% ─── LAYER 2: Transcription ─────────────────────────────────
     Transcribe["Amazon Transcribe"]
 
-    subgraph Agent["FNOL Intake Agent"]
-        AgentCoreRuntime["Bedrock AgentCore Runtime\n(claims intake agent)"]
-        AgentCoreMemory["Bedrock AgentCore Memory\n(Claim_Session context)"]
+    %% ─── LAYER 3: FNOL Intake Agent ─────────────────────────────
+    subgraph Agent["2. FNOL Intake Agent"]
+        direction TB
+        AgentCoreRuntime["Bedrock AgentCore\nRuntime"]
+        AgentCoreMemory["Bedrock AgentCore\nMemory"]
+        AgentCoreRuntime <--> AgentCoreMemory
     end
 
-    Voice --> Transcribe --> AgentCoreRuntime
+    %% ─── LAYER 4: Claims Orchestrator ───────────────────────────
+    subgraph Orchestrator["3. Claims Orchestrator"]
+        direction TB
+        StepFunctions["AWS Step Functions\n(Claim Lifecycle)"]
+    end
+
+    %% ─── LAYER 5: Processing Services ───────────────────────────
+    subgraph Processing["4. Processing Services"]
+        direction TB
+        DamageLambda["Damage Assessment\nLambda"]
+        FraudLambda["Fraud Detection\nLambda"]
+        PayoutLambda["Payout\nLambda"]
+        NotifyLambda["Notify Customer\nLambda"]
+    end
+
+    %% ─── LAYER 6: Data & Storage ────────────────────────────────
+    subgraph Storage["5. Data Layer"]
+        direction TB
+        ClaimsTable[("DynamoDB\nClaims Table")]
+        AuditTable[("DynamoDB\nAudit Log")]
+        S3Photos[("S3\ndamage-photos")]
+        S3Docs[("S3\nclaim-documents")]
+    end
+
+    %% ─── LAYER 7: Customer Portal ───────────────────────────────
+    subgraph Portal["6. Customer Portal"]
+        direction TB
+        AmplifyFrontend["Amplify Frontend\n(React SPA)"]
+        Cognito["Amazon Cognito"]
+        PortalAPI["API Gateway\n+ Lambda"]
+    end
+
+    %% ─── LAYER 8: Human Roles ───────────────────────────────────
+    subgraph Humans["7. Human Review"]
+        direction TB
+        HumanAdjuster["Human Adjuster"]
+        FraudAnalyst["Fraud Analyst"]
+        ComplianceOfficer["Compliance Officer"]
+    end
+
+    %% ─── LAYER 9: Encryption ────────────────────────────────────
+    KMS["AWS KMS\n(CMKs per data class)"]
+
+    %% ─── FLOW: Channels → Agent ─────────────────────────────────
+    Voice --> Transcribe
+    Transcribe --> AgentCoreRuntime
     Email --> AgentCoreRuntime
     Chat --> AgentCoreRuntime
-    AgentCoreRuntime <--> AgentCoreMemory
 
-    AgentCoreRuntime -->|create/update Claim| ClaimsTable[(DynamoDB\nClaims Table)]
-    AgentCoreRuntime -->|SendTaskSuccess/Failure| Orchestrator
+    %% ─── FLOW: Agent → Orchestrator + Data ──────────────────────
+    AgentCoreRuntime -->|"create/update\nClaim"| ClaimsTable
+    AgentCoreRuntime -->|"SendTaskSuccess"| StepFunctions
 
-    subgraph Evidence["Evidence Handling"]
-        S3Photos[(S3: damage-photos)]
-        S3Docs[(S3: claim-documents)]
-        Rekognition["Amazon Rekognition"]
-        DamageLambda["Damage Assessment\nLambda"]
-    end
+    %% ─── FLOW: Orchestrator → Services ──────────────────────────
+    StepFunctions -->|"invoke"| DamageLambda
+    StepFunctions -->|"invoke"| FraudLambda
+    StepFunctions -->|"invoke"| PayoutLambda
+    StepFunctions -->|"invoke"| NotifyLambda
 
-    S3Photos --> DamageLambda --> Rekognition
-    DamageLambda -->|SendTaskSuccess/Failure| Orchestrator
-    DamageLambda --> ClaimsTable
+    %% ─── FLOW: Services → Data ──────────────────────────────────
+    DamageLambda -->|"severity +\ncost"| ClaimsTable
+    DamageLambda -->|"analyze"| S3Photos
+    FraudLambda -->|"fraud flag"| ClaimsTable
+    PayoutLambda -->|"status: Paid"| ClaimsTable
 
-    Orchestrator["AWS Step Functions\nClaims Orchestrator"]
-    FraudLambda["Fraud Detection\nLambda"]
-    PayoutLambda["Payout Lambda"]
-    AdjusterQueue[(DynamoDB\nReview Queue)]
+    %% ─── FLOW: Services → Audit ─────────────────────────────────
+    DamageLambda -->|"audit"| AuditTable
+    FraudLambda -->|"audit"| AuditTable
+    PayoutLambda -->|"audit"| AuditTable
 
-    Orchestrator --> FraudLambda --> ClaimsTable
-    Orchestrator --> PayoutLambda --> ClaimsTable
-    Orchestrator --> AdjusterQueue
-    Orchestrator --> AuditLambda["Audit Log Lambda"]
-    FraudLambda --> AuditLambda
-    DamageLambda --> AuditLambda
-    PayoutLambda --> AuditLambda
-    AgentCoreRuntime --> AuditLambda
-
-    AuditLambda --> AuditTable[(DynamoDB\nAudit Log, append-only)]
-
-    subgraph Portal["Customer Portal"]
-        AmplifyFrontend["Amplify Frontend\n(React SPA)"]
-        Cognito["Amazon Cognito\nUser Pool"]
-        PortalAPI["API Gateway + Lambda"]
-    end
-
+    %% ─── FLOW: Portal ───────────────────────────────────────────
     AmplifyFrontend --> Cognito
     AmplifyFrontend --> PortalAPI
-    PortalAPI --> ClaimsTable
-    PortalAPI --> S3Docs
-    PortalAPI --> AuditTable
-    PortalAPI -->|submit dispute| Orchestrator
+    PortalAPI -->|"read claims"| ClaimsTable
+    PortalAPI -->|"upload docs"| S3Docs
+    PortalAPI -->|"submit dispute"| StepFunctions
 
-    HumanAdjuster["Human Adjuster"]
-    FraudAnalyst["Fraud Analyst"]
-    ComplianceOfficer["Compliance Officer"]
+    %% ─── FLOW: Humans ───────────────────────────────────────────
+    HumanAdjuster -->|"review +\ndecide"| StepFunctions
+    FraudAnalyst -->|"review +\ndecide"| StepFunctions
+    ComplianceOfficer -->|"query"| AuditTable
 
-    HumanAdjuster -->|review, decide| AdjusterQueue
-    FraudAnalyst -->|review, decide| AdjusterQueue
-    ComplianceOfficer -->|query| AuditTable
-
-    KMS["AWS KMS\n(CMKs per data class)"]
-    KMS -.encrypts.- ClaimsTable
-    KMS -.encrypts.- AuditTable
-    KMS -.encrypts.- S3Photos
-    KMS -.encrypts.- S3Docs
+    %% ─── FLOW: Encryption ───────────────────────────────────────
+    KMS -.-|"encrypts"| ClaimsTable
+    KMS -.-|"encrypts"| AuditTable
+    KMS -.-|"encrypts"| S3Photos
+    KMS -.-|"encrypts"| S3Docs
 ```
 
 ### Key Architectural Decisions

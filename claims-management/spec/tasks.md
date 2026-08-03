@@ -188,7 +188,7 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
     - **Property 9: All fields resolved transitions to Assessment**
     - **Validates: Requirements 2.5**
 
-- [ ] 8. Checkpoint - Ensure all tests pass
+- [x] 8. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 9. Implement Damage Assessment Service
@@ -261,7 +261,7 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
     - Call the 2.4 audit-write-precedes-effect wrapper before applying a fraud flag or analyst decision
     - _Requirements: 8.1, 8.3, 8.6_
 
-- [ ] 11. Checkpoint - Ensure all tests pass
+- [x] 11. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 12. Implement Claims Orchestrator lifecycle and approval logic
@@ -321,278 +321,278 @@ This plan implements the five cooperating subsystems from the design (FNOL Intak
     - Use `Claim_ID` as a `payoutIdempotencyKey` on the payment-initiation call and set `Claim_Status` to `Paid` on success
     - _Requirements: 7.7_
 
-- [ ] 13. Checkpoint - Ensure all tests pass
+- [x] 13. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 14. Implement Dispute Resolution workflow
-  - [ ] 14.1 Implement dispute submission validation
+- [x] 14. Implement Dispute Resolution workflow
+  - [x] 14.1 Implement dispute submission validation
     - Accept a dispute if and only if `Claim_Status` is `Approved` or `Denied` and the reason is non-empty and within `maxDisputeReasonLength`; otherwise reject with the specific violated requirement
     - _Requirements: 11.1, 11.4, 11.5_
 
-  - [ ]* 14.2 Write property test for dispute submission validation
+  - [x]* 14.2 Write property test for dispute submission validation
     - **Property 39: Dispute submission validation**
     - **Validates: Requirements 11.1, 11.4, 11.5**
 
-  - [ ] 14.3 Implement `DisputeResolutionWorkflow` state machine definition
+  - [x] 14.3 Implement `DisputeResolutionWorkflow` state machine definition
     - Define `ValidateDispute` → `RouteToAdjuster` → `AwaitAdjusterResolution` → `Resolved`/`Rejected` states, started on dispute submission
     - _Requirements: 11.1_
 
-  - [ ] 14.4 Implement dispute review visibility data assembly
+  - [x] 14.4 Implement dispute review visibility data assembly
     - Assemble the original `Automated_Decision` record and the customer's dispute reason for the reviewing Human_Adjuster
     - _Requirements: 11.2_
 
-  - [ ]* 14.5 Write property test for dispute review visibility round-trip
+  - [x]* 14.5 Write property test for dispute review visibility round-trip
     - **Property 40: Dispute review visibility round-trip**
     - **Validates: Requirements 11.2**
 
-  - [ ] 14.6 Implement dispute resolution recording handler
+  - [x] 14.6 Implement dispute resolution recording handler
     - Accept the resolution and set `Claim_Status` to `Resolved`, recording the revised decision and adjuster identity, only when the revised decision is `Approved` or `Denied`
     - _Requirements: 11.3_
 
-  - [ ]* 14.7 Write property test for dispute resolution decision constraint
+  - [x]* 14.7 Write property test for dispute resolution decision constraint
     - **Property 41: Dispute resolution decision constraint and recording**
     - **Validates: Requirements 11.3**
 
-  - [ ] 14.8 Wire dispute resolution audit event recording
+  - [x] 14.8 Wire dispute resolution audit event recording
     - Record the original decision, revised decision, and adjuster identity via the Audit Log Service when a Disputed Claim is Resolved
     - _Requirements: 11.6_
 
-  - [ ]* 14.9 Write property test for dispute resolution audit completeness
+  - [x]* 14.9 Write property test for dispute resolution audit completeness
     - **Property 42: Dispute resolution audit completeness**
     - **Validates: Requirements 11.6**
 
-- [ ] 15. Implement Customer Portal authentication and session management
+- [x] 15. Implement Customer Portal authentication and session management
   - [x] 15.1 Implement Cognito authentication integration with generic error handling
     - Surface an identical, non-leaking invalid-credential error message regardless of whether the username or password was incorrect
     - _Requirements: 9.1, 9.2_
 
-  - [ ]* 15.2 Write property test for authentication failure message uniformity
+  - [x]* 15.2 Write property test for authentication failure message uniformity
     - **Property 34: Authentication failure message uniformity**
     - **Validates: Requirements 9.2**
 
-  - [ ] 15.3 Implement PreAuthentication Lambda trigger for lockout tracking
+  - [x] 15.3 Implement PreAuthentication Lambda trigger for lockout tracking
     - Track consecutive failed attempts per account in a TTL-based DynamoDB table and deny attempts once 5 consecutive failures occur within 15 minutes, until the lockout expires
     - _Requirements: 9.3_
 
-  - [ ]* 15.4 Write property test for consecutive-failure account lockout
+  - [x]* 15.4 Write property test for consecutive-failure account lockout
     - **Property 35: Consecutive-failure account lockout**
     - **Validates: Requirements 9.3**
 
-  - [ ] 15.5 Implement session idle-timeout enforcement
+  - [x] 15.5 Implement session idle-timeout enforcement
     - Enforce a configurable timeout (default 15 minutes, range 5-30) that terminates the session and requires re-authentication once idle duration is reached
     - _Requirements: 9.6_
 
-  - [ ]* 15.6 Write property test for session idle timeout enforcement
+  - [x]* 15.6 Write property test for session idle timeout enforcement
     - **Property 37: Session idle timeout enforcement**
     - **Validates: Requirements 9.6**
 
-- [ ] 16. Implement Customer Portal claim access, document upload, and PII authorization
-  - [ ] 16.1 Implement claim-ownership authorization predicate
+- [x] 16. Implement Customer Portal claim access, document upload, and PII authorization
+  - [x] 16.1 Implement claim-ownership authorization predicate
     - Permit an operation (view status, view history, upload document) if and only if the authenticated customer's id is present in the Claim's `policyholderIds`, denying with a generic "claim not accessible" message otherwise
     - _Requirements: 9.4, 9.5, 10.5, 10.6_
 
-  - [ ]* 16.2 Write property test for claim access authorization
+  - [x]* 16.2 Write property test for claim access authorization
     - **Property 36: Claim access authorization**
     - **Validates: Requirements 9.4, 9.5, 10.5, 10.6**
 
-  - [ ] 16.5 Implement `POST /claims/{id}/documents` endpoint
+  - [x] 16.5 Implement `POST /claims/{id}/documents` endpoint
     - Reuse the shared upload validator (5.1) and the claim-ownership predicate (16.1); return an explicit success confirmation on completion
     - _Requirements: 10.2, 10.3, 10.4_
 
-  - [ ] 16.3 Implement `GET /claims/{id}` status/history endpoint
+  - [x] 16.3 Implement `GET /claims/{id}` status/history endpoint
     - Return the Claim's current `claimStatus` together with its complete `statusHistory`
     - _Requirements: 10.1_
 
-  - [ ]* 16.4 Write property test for claim status view data pass-through
+  - [x]* 16.4 Write property test for claim status view data pass-through
     - **Property 38: Claim status view data pass-through**
     - **Validates: Requirements 10.1**
 
-  - [ ] 16.6 Implement PII access authorization predicate with denial audit
+  - [x] 16.6 Implement PII access authorization predicate with denial audit
     - Grant access to stored PII if and only if the requester is an authorized system component or holds an authorized human role (Human_Adjuster, Fraud_Analyst, compliance officer); record every denial as an `AccessDenied` record via the Audit Log Service
     - _Requirements: 12.3, 12.4_
 
-  - [ ]* 16.7 Write property test for PII access authorization and denial audit
+  - [x]* 16.7 Write property test for PII access authorization and denial audit
     - **Property 43: PII access authorization and denial audit**
     - **Validates: Requirements 12.3, 12.4**
 
-- [ ] 17. Final checkpoint - Ensure all tests pass
+- [x] 17. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 18. Implement Customer Portal frontend (Amplify SPA)
-  - [ ] 18.1 Initialize Amplify frontend project scaffold
+- [x] 18. Implement Customer Portal frontend (Amplify SPA)
+  - [x] 18.1 Initialize Amplify frontend project scaffold
     - Bootstrap a React SPA via the Amplify CLI/Gen 2 project scaffold; configure the Amplify Auth library against the existing Cognito User Pool and the Amplify API library against the existing Portal API; configure Amplify Storage for S3 document/photo uploads
     - _Requirements: 9.1 (foundational, supports all frontend requirements)_
 
-  - [ ] 18.2 Implement Login/Authentication screen
+  - [x] 18.2 Implement Login/Authentication screen
     - Build a username + password form; on failure, display the generic invalid-credential error message returned by the backend (Property 34) without indicating which field was wrong; on session idle-timeout, present a re-authentication prompt without discarding the customer's in-progress view state
     - _Requirements: 9.1, 9.2, 9.6_
 
-  - [ ] 18.3 Implement Claims List/Dashboard view
+  - [x] 18.3 Implement Claims List/Dashboard view
     - Fetch and render the list of claims scoped to the authenticated customer via the existing Portal API, as the landing view after login
     - _Requirements: 9.4_
 
-  - [ ] 18.4 Implement Claim Detail/Status view
+  - [x] 18.4 Implement Claim Detail/Status view
     - Fetch a claim via `GET /claims/{id}` and render its current `Claim_Status` together with the full `statusHistory` as a timeline
     - _Requirements: 10.1_
 
-  - [ ] 18.5 Implement Document Upload component
+  - [x] 18.5 Implement Document Upload component
     - Build a file picker with client-side format/size pre-validation mirroring the shared upload validator (5.1/Property 17), upload progress indication, and an explicit success/failure confirmation; submit via `POST /claims/{id}/documents`
     - _Requirements: 10.2, 10.3, 10.4_
 
-  - [ ] 18.6 Implement Dispute Submission form
+  - [x] 18.6 Implement Dispute Submission form
     - Render the form only when the displayed claim's status is `Approved` or `Denied`; include a reason field with client-side max-length validation mirroring the configured `maxDisputeReasonLength`; submit via `POST /claims/{id}/disputes`
     - _Requirements: 11.1, 11.4, 11.5_
 
-  - [ ] 18.7 Configure Amplify Hosting deployment
+  - [x] 18.7 Configure Amplify Hosting deployment
     - Configure Amplify Hosting with git-branch-based CI/CD to build and deploy the frontend on push to the configured branch
     - _Requirements: (foundational, deployment)_
 
-  - [ ]* 18.8 Write unit tests for the Login/Authentication screen
+  - [x]* 18.8 Write unit tests for the Login/Authentication screen
     - Test that the invalid-credential error message is identical regardless of which field was wrong, and that idle-timeout triggers a re-authentication prompt while preserving in-progress view state
     - _Requirements: 9.2, 9.6_
 
-  - [ ]* 18.9 Write unit tests for the Claims List/Dashboard view
+  - [x]* 18.9 Write unit tests for the Claims List/Dashboard view
     - Test that only claims returned by the Portal API for the authenticated customer are rendered
     - _Requirements: 9.4_
 
-  - [ ]* 18.10 Write unit tests for the Claim Detail/Status view
+  - [x]* 18.10 Write unit tests for the Claim Detail/Status view
     - Test that the rendered view reflects the claim's current status and full `statusHistory` returned by `GET /claims/{id}`
     - _Requirements: 10.1_
 
-  - [ ]* 18.11 Write unit tests for the Document Upload component
+  - [x]* 18.11 Write unit tests for the Document Upload component
     - Test client-side rejection of unsupported formats/oversized files before any upload call, and rendering of the success/failure confirmation based on the API response
     - _Requirements: 10.2, 10.3, 10.4_
 
-  - [ ]* 18.12 Write unit tests for the Dispute Submission form
+  - [x]* 18.12 Write unit tests for the Dispute Submission form
     - Test that the form is hidden for claims not in `Approved`/`Denied` status, and that client-side max-length validation rejects an over-length reason before submission
     - _Requirements: 11.1, 11.4, 11.5_
 
-- [ ] 19. Final frontend checkpoint - Ensure all tests pass
+- [x] 19. Final frontend checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 20. Implement Infrastructure as Code (AWS CDK)
-  - [ ] 20.1 Initialize CDK project scaffold
+- [x] 20. Implement Infrastructure as Code (AWS CDK)
+  - [x] 20.1 Initialize CDK project scaffold
     - Bootstrap a CDK v2 TypeScript app in `infra/` with a single stack (`ClaimsManagementStack`); configure the CDK CLI, environment variables for target account/region, and the monorepo build integration (e.g., `npm run cdk:synth` from root)
     - _Foundational_
 
-  - [ ] 20.2 Define DynamoDB tables and GSIs
+  - [x] 20.2 Define DynamoDB tables and GSIs
     - Create `Claims` table (PK `claimId`), `ClaimSessions` table (PK `claimId`, GSI `PolicyNumberStatusIndex` on `policyNumber`+`claimStatus`), `AuditLog` table (PK `logId`, SK `claimId`, GSI `ClaimIdIndex` on `claimId`), and `LoginAttempts` table (PK `username`, TTL-enabled). Enforce server-side encryption with KMS CMKs per data class
     - _Requirements: 3.1, 7.6, 8.2, 8.4, 9.3, 12.1_
 
-  - [ ] 20.3 Define S3 buckets for evidence storage
+  - [x] 20.3 Define S3 buckets for evidence storage
     - Create `damage-photos` and `claim-documents` buckets with server-side encryption (SSE-KMS, CMK per bucket), versioning, lifecycle policies, CORS configuration for the frontend, and block-public-access settings
     - _Requirements: 4.1, 10.2, 12.1_
 
-  - [ ] 20.4 Define Cognito User Pool and App Client
+  - [x] 20.4 Define Cognito User Pool and App Client
     - Create the User Pool with password policy, MFA configuration, custom attributes, the App Client (USER_PASSWORD_AUTH flow), the `Customer` group, and IAM roles for authenticated/unauthenticated users; define the PreAuthentication Lambda trigger hook for lockout
     - _Requirements: 9.1, 9.2, 9.3_
 
-  - [ ] 20.5 Define Lambda functions for backend services
+  - [x] 20.5 Define Lambda functions for backend services
     - Define Lambda functions for: FNOL Intake Agent, Damage Assessment, Fraud Detection, Orchestrator lifecycle stages (EvaluateApproval, RunPayout, NotifyCustomer), Audit Log, Portal API handlers; configure appropriate IAM roles with least-privilege per function, environment variables for table names and config, and VPC/subnet placement if required
     - _Requirements: All (deployment wiring)_
 
-  - [ ] 20.6 Define Step Functions state machines
+  - [x] 20.6 Define Step Functions state machines
     - Define `ClaimLifecycleWorkflow` (Intake → Assessment → Fraud_Check → EvaluateApproval → Payout/AdjusterReview, with `waitForTaskToken` for human-in-the-loop stages) and `DisputeResolutionWorkflow` (ValidateDispute → RouteToAdjuster → AwaitResolution → Resolved); configure retry/catch blocks matching the `stageRetryMaxAttempts`/`stageRetryBackoffSeconds` config; wire service integrations (Lambda invoke, task token callbacks)
     - _Requirements: 7.1, 7.2, 7.3, 11.1_
 
-  - [ ] 20.7 Define API Gateway (REST/HTTP API) for Portal
+  - [x] 20.7 Define API Gateway (REST/HTTP API) for Portal
     - Define API routes: `POST /auth/login`, `GET /claims`, `GET /claims/{id}`, `POST /claims/{id}/documents`, `POST /claims/{id}/disputes`; attach Cognito authorizer; configure CORS, throttling, and request validation
     - _Requirements: 9.1, 10.1, 10.2, 11.1_
 
-  - [ ] 20.8 Define SES and Amazon Connect integrations
+  - [x] 20.8 Define SES and Amazon Connect integrations
     - Configure SES receipt rule for inbound claim emails (triggering the Email adapter Lambda); define the Amazon Connect contact flow integration for the Voice channel (streaming to Transcribe, invoking the Intake Agent)
     - _Requirements: 1.1, 1.2_
 
-  - [ ] 20.9 Define Amplify Hosting for frontend
+  - [x] 20.9 Define Amplify Hosting for frontend
     - Configure Amplify Hosting for the `frontend/` React SPA with git-branch-based CI/CD, build settings referencing `frontend/amplify.yml`, environment variables for API endpoint and Cognito config, custom domain (if applicable)
     - _Requirements: (deployment)_
 
-  - [ ] 20.10 Define KMS keys and IAM policies for data protection
+  - [x] 20.10 Define KMS keys and IAM policies for data protection
     - Create per-data-class CMKs (Claims, AuditLog, Photos, Documents) with key policies granting encrypt/decrypt only to the specific Lambda execution roles that need them; enforce `aws:SecureTransport` condition on all S3 bucket policies; deny `dynamodb:DeleteItem` and `dynamodb:UpdateItem` on the AuditLog table for all roles (immutability guarantee)
     - _Requirements: 12.1, 12.2, 8.2_
 
-  - [ ] 20.11 Define CloudWatch alarms and monitoring
+  - [x] 20.11 Define CloudWatch alarms and monitoring
     - Create alarms for: Lambda error rates, Step Functions execution failures, DynamoDB throttling, S3 4xx/5xx rates, Cognito sign-in failures; configure a dashboard with key operational metrics
     - _(Operational readiness)_
 
-  - [ ] 20.12 Write CDK unit tests (assertions on synthesized template)
+  - [x] 20.12 Write CDK unit tests (assertions on synthesized template)
     - Verify table definitions, GSI presence, encryption settings, Lambda IAM role policies, Step Functions state machine shape, API Gateway route presence, and S3 bucket policies using CDK assertions (`@aws-cdk/assertions`)
     - _(Deployment verification)_
 
-- [ ] 21. Implement Integration Tests
-  - [ ] 21.1 Set up integration test framework and environment configuration
+- [x] 21. Implement Integration Tests
+  - [x] 21.1 Set up integration test framework and environment configuration
     - Configure a test framework (Jest or Vitest) for integration tests in `tests/integration/`; define environment variable loading for deployed resource ARNs/endpoints (DynamoDB table names, API URL, Cognito client id, S3 bucket names); implement test utilities for authenticated API calls (Cognito token acquisition), DynamoDB item cleanup, and S3 object cleanup
     - _Foundational_
 
-  - [ ] 21.2 Integration test: DynamoDB Claims table CRUD and status history append
+  - [x] 21.2 Integration test: DynamoDB Claims table CRUD and status history append
     - Verify `getClaim`, `putClaim`, `updateClaim`, and `appendStatusHistory` work against the real DynamoDB table; confirm `statusHistory` appends are atomic and ordered
     - _Requirements: 7.6_
 
-  - [ ] 21.3 Integration test: DynamoDB AuditLog immutability
+  - [x] 21.3 Integration test: DynamoDB AuditLog immutability
     - Verify that `PutItem` with `attribute_not_exists(LogId)` succeeds for new records and fails with `ConditionalCheckFailedException` for duplicates; verify no IAM role (except the table admin, if any) can call `UpdateItem` or `DeleteItem` on the AuditLog table
     - _Requirements: 8.2_
 
-  - [ ] 21.4 Integration test: ClaimSessions GSI query (PolicyNumberStatusIndex)
+  - [x] 21.4 Integration test: ClaimSessions GSI query (PolicyNumberStatusIndex)
     - Write multiple sessions with the same policy number and different statuses; query the GSI and verify only `Intake`-status sessions are returned for the resume flow
     - _Requirements: 3.1, 3.5_
 
-  - [ ] 21.5 Integration test: Cognito authentication flow
+  - [x] 21.5 Integration test: Cognito authentication flow
     - Create a test user, authenticate with correct credentials (expect success), authenticate with wrong password (expect generic failure message), authenticate with nonexistent username (expect same generic failure message); verify no information leakage between the two failure cases
     - _Requirements: 9.1, 9.2_
 
-  - [ ] 21.6 Integration test: Account lockout after consecutive failures
+  - [x] 21.6 Integration test: Account lockout after consecutive failures
     - Trigger 5 consecutive failed logins for a test user; verify the 6th attempt is rejected with the lockout message; wait for TTL expiry (or manually clean up) and verify login succeeds again
     - _Requirements: 9.3_
 
-  - [ ] 21.7 Integration test: S3 photo upload with format/size validation
+  - [x] 21.7 Integration test: S3 photo upload with format/size validation
     - Upload a valid JPEG under the size limit (expect success, object exists in S3); upload an unsupported format (expect rejection before S3 write); upload an oversized file (expect rejection); verify the `maxPhotosPerClaim` limit is enforced
     - _Requirements: 4.1, 4.4, 4.5_
 
-  - [ ] 21.8 Integration test: S3 document upload via Portal API
+  - [x] 21.8 Integration test: S3 document upload via Portal API
     - Authenticate as a customer, upload a PDF via `POST /claims/{id}/documents` for an owned claim (expect 200 + document ref); attempt upload for a non-owned claim (expect 403 generic message); upload an unsupported format (expect 400)
     - _Requirements: 10.2, 10.3, 10.4, 10.5, 10.6_
 
-  - [ ] 21.9 Integration test: KMS encryption at rest verification
+  - [x] 21.9 Integration test: KMS encryption at rest verification
     - Verify DynamoDB tables have SSE-KMS enabled with the expected CMK ARN; verify S3 buckets have default encryption set to SSE-KMS with the expected CMK ARN; verify a `GetItem` call decrypts transparently when the caller has `kms:Decrypt` permission and fails without it
     - _Requirements: 12.1, 12.2_
 
-  - [ ] 21.10 Integration test: TLS in transit enforcement
+  - [x] 21.10 Integration test: TLS in transit enforcement
     - Verify S3 bucket policies include `aws:SecureTransport` condition denying HTTP; attempt an HTTP (non-HTTPS) request to the API Gateway endpoint (expect redirect or rejection)
     - _Requirements: 12.2_
 
-  - [ ] 21.11 Integration test: Cognito authorizer on Portal API
+  - [x] 21.11 Integration test: Cognito authorizer on Portal API
     - Call a protected endpoint (`GET /claims`) without a token (expect 401); call with an expired token (expect 401); call with a valid token (expect 200); verify the authorizer context includes the correct Cognito groups
     - _Requirements: 9.1, 9.4_
 
-  - [ ] 21.12 Integration test: Step Functions claim lifecycle end-to-end
+  - [x] 21.12 Integration test: Step Functions claim lifecycle end-to-end
     - Start a `ClaimLifecycleWorkflow` execution for a test claim; send task-token callbacks to advance through Intake → Assessment → Fraud_Check → Approved → Paid; verify `statusHistory` contains exactly the expected transitions in order; verify audit records exist for each decision stage
     - _Requirements: 7.1, 7.6, 8.1_
 
-  - [ ] 21.13 Integration test: Step Functions retry and escalation
+  - [x] 21.13 Integration test: Step Functions retry and escalation
     - Start an execution and simulate a transient failure (ThrottlingException) in the Assessment stage; verify the state machine retries up to `stageRetryMaxAttempts`; simulate exhaustion and verify escalation to `Pending_Adjuster_Review`
     - _Requirements: 7.2, 7.3_
 
-  - [ ] 21.14 Integration test: Step Functions dispute resolution workflow
+  - [x] 21.14 Integration test: Step Functions dispute resolution workflow
     - Start a `DisputeResolutionWorkflow` for an Approved claim; send a resolution task-token callback; verify the claim transitions to Resolved and the audit record contains the original + revised decisions
     - _Requirements: 11.1, 11.3, 11.6_
 
-  - [ ] 21.15 Integration test: Fraud flag payout suspension
+  - [x] 21.15 Integration test: Fraud flag payout suspension
     - Create a claim with `fraudFlag: true` and no analyst decision; attempt to advance the lifecycle past Fraud_Check to Payout; verify payout is suspended (execution pauses at `AwaitFraudAnalystDecision`); simulate analyst clear; verify payout proceeds
     - _Requirements: 6.5_
 
-  - [ ] 21.16 Integration test: Amazon Transcribe voice channel wiring
+  - [x] 21.16 Integration test: Amazon Transcribe voice channel wiring
     - Submit a sample audio file to the Voice channel adapter Lambda; verify it invokes Amazon Transcribe and produces a `ChannelMessage` with segments and confidence scores; verify low-confidence segments trigger the confirm/restate prompt
     - _Requirements: 1.1, 1.5_
 
-  - [ ] 21.17 Integration test: Amazon Rekognition damage assessment wiring
+  - [x] 21.17 Integration test: Amazon Rekognition damage assessment wiring
     - Submit a known test image to the Damage Assessment Lambda; verify it invokes Rekognition and produces a severity rating, repair cost estimate, and confidence score stored on the claim
     - _Requirements: 4.2, 4.3_
 
-  - [ ] 21.18 Integration test: Customer notification delivery
+  - [x] 21.18 Integration test: Customer notification delivery
     - Advance a claim to `Approved` status; verify the NotifyCustomer Lambda was invoked and delivered (or enqueued) a notification through the claim's original channel
     - _Requirements: 7.8_
 
-- [ ] 22. Checkpoint — CDK synth clean, all integration tests pass
+- [x] 22. Checkpoint — CDK synth clean, all integration tests pass
   - Run `cdk synth` to verify no synthesis errors; run the full integration test suite against the deployed stack; document any environment-specific setup required
 
 ## Notes
