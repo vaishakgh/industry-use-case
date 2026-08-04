@@ -176,7 +176,7 @@ export class ComputeConstruct extends Construct {
         LOGIN_ATTEMPTS_TABLE_NAME: props.loginAttemptsTable.tableName,
       },
     });
-    props.claimsTable.grantReadData(this.portalApiFn);
+    props.claimsTable.grantReadWriteData(this.portalApiFn);
     props.documentsBucket.grantReadWrite(this.portalApiFn);
     props.auditLogTable.grantReadData(this.portalApiFn);
     props.loginAttemptsTable.grantReadWriteData(this.portalApiFn);
