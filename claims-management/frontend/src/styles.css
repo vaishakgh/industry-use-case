@@ -589,3 +589,126 @@ main {
 .status-denied { color: var(--danger); font-weight: 600; }
 .status-pending { color: var(--warning); font-weight: 600; }
 .status-disputed { color: #9c27b0; font-weight: 600; }
+
+/* ─── Report New Claim ──────────────────────────────── */
+
+.report-claim {
+  width: 100%;
+  max-width: 700px;
+  padding: 2rem;
+}
+
+.report-claim .back-btn {
+  padding: 0.5rem 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  transition: background 0.2s;
+}
+
+.report-claim .back-btn:hover {
+  background: var(--bg);
+}
+
+.report-claim h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.report-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.report-claim form {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.report-claim .submit-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.report-claim .submit-btn:hover {
+  background: var(--primary-dark);
+}
+
+.report-claim .submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.report-claim-btn {
+  padding: 0.6rem 1.2rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.report-claim-btn:hover {
+  background: var(--primary-dark);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}

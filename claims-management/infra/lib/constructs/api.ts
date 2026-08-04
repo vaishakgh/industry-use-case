@@ -90,6 +90,12 @@ export class ApiConstruct extends Construct {
       authorizationType: apigateway.AuthorizationType.COGNITO,
     });
 
+    // POST /claims/report — authenticated (Report New Claim)
+    claimsResource.addResource('report').addMethod('POST', lambdaIntegration, {
+      authorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    });
+
     // ─── Outputs ───────────────────────────────────────────────────
     new cdk.CfnOutput(this, 'ApiUrl', {
       value: this.api.url,

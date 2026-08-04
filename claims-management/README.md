@@ -235,7 +235,7 @@ claims-management/
 
 ---
 
-## 6. Code
+## 6. Code & Tests
 
 | Component | Location | Description |
 |---|---|---|
@@ -243,6 +243,7 @@ claims-management/
 | Frontend | [`frontend/`](./frontend/) | Amplify React SPA (login, dashboard, claim detail, document upload, dispute form) |
 | Infrastructure | [`infra/`](./infra/) | AWS CDK v2 stack (DynamoDB, S3, Cognito, Lambda, Step Functions, API Gateway, KMS, CloudWatch) |
 | Postman Collection | [`postman/Claims-Management-API.postman_collection.json`](./postman/Claims-Management-API.postman_collection.json) | API endpoints + Step Functions test scenarios |
+| Integration Tests | [`tests/integration/`](./tests/integration/) | 18 integration test suites validating the deployed stack |
 
 ---
 
@@ -252,8 +253,9 @@ claims-management/
 |---|---|
 | [`output/project-status/project-status.md`](./output/project-status/project-status.md) | Overall project status, task completion, deployment target |
 | [`output/session-log/session-log.md`](./output/session-log/session-log.md) | Detailed session log of the spec-driven development process |
-| [`output/step-functions/step-functions-scenarios.md`](./output/step-functions/step-functions-scenarios.md) | 4 Step Functions test scenarios with DynamoDB results and screenshots |
-| [`tests/integration/`](./tests/integration/) | 18 integration test suites validating the deployed stack |
+| [`output/fnol-intake-agent/fnol-intake-agent-scenarios.md`](./output/fnol-intake-agent/fnol-intake-agent-scenarios.md) | 5 FNOL Intake Agent channel scenarios (Chat, Email, Voice) with end-to-end lifecycle, state machine diagram, and audit log results |
+| [`output/channels/channels-testing.md`](./output/channels/channels-testing.md) | Chat and Voice channel end-to-end testing with Amazon Connect integration |
+| [`output/frontend-portal/frontend-portal.md`](./output/frontend-portal/frontend-portal.md) | Customer Portal frontend — login, claims dashboard, claim detail, document upload, dispute submission, DynamoDB state, and S3 documents |
 
 ---
 

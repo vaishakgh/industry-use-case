@@ -66,6 +66,7 @@ export class ComputeConstruct extends Construct {
     props.claimsTable.grantReadWriteData(this.intakeAgentFn);
     props.claimSessionsTable.grantReadWriteData(this.intakeAgentFn);
     props.auditLogTable.grantWriteData(this.intakeAgentFn);
+    // Step Functions permission added in claims-management-stack.ts after orchestration construct
 
     // ─── Damage Assessment ─────────────────────────────────────────
     this.damageAssessmentFn = new lambda.Function(this, 'DamageAssessmentFn', {
@@ -180,6 +181,8 @@ export class ComputeConstruct extends Construct {
     props.documentsBucket.grantReadWrite(this.portalApiFn);
     props.auditLogTable.grantReadData(this.portalApiFn);
     props.loginAttemptsTable.grantReadWriteData(this.portalApiFn);
+    // Permission to invoke Intake Agent Lambda (for Report New Claim)
+    this.intakeAgentFn.grantInvoke(this.portalApiFn);
 
     // ─── PreAuthentication Trigger ─────────────────────────────────
     this.preAuthenticationFn = new lambda.Function(this, 'PreAuthenticationFn', {

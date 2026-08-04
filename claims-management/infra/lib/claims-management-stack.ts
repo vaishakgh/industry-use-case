@@ -101,6 +101,13 @@ export class ClaimsManagementStack extends cdk.Stack {
       userPool: auth.userPool,
     });
 
+    // Grant Intake Agent permission to start Step Functions executions
+    orchestration.claimLifecycleStateMachine.grantStartExecution(compute.intakeAgentFn);
+    compute.intakeAgentFn.addEnvironment(
+      'LIFECYCLE_STATE_MACHINE_ARN',
+      orchestration.claimLifecycleStateMachine.stateMachineArn,
+    );
+
     // 8. Channels — SES + Connect
     new ChannelsConstruct(this, 'Channels', {
       config,

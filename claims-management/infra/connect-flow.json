@@ -1,0 +1,66 @@
+{
+  "Version": "2019-10-30",
+  "StartAction": "play-welcome",
+  "Actions": [
+    {
+      "Identifier": "play-welcome",
+      "Type": "MessageParticipant",
+      "Parameters": {
+        "Text": "Welcome to Claims FNOL. Simulating voice intake for a parking lot damage claim."
+      },
+      "Transitions": {
+        "NextAction": "invoke-lambda"
+      }
+    },
+    {
+      "Identifier": "invoke-lambda",
+      "Type": "InvokeLambdaFunction",
+      "Parameters": {
+        "LambdaFunctionARN": "arn:aws:lambda:eu-central-1:618257308782:function:claims-intake-agent-dev",
+        "InvocationTimeLimitSeconds": "8",
+        "LambdaInvocationAttributes": {
+          "channel": "Voice",
+          "policyNumber": "POL-VOICE-CONNECT",
+          "damageDescription": "Vehicle damage reported via phone call. Rear bumper dented in parking lot.",
+          "incidentLocation": "Main Street Parking Lot, Frankfurt",
+          "priorClaimCount": "1"
+        }
+      },
+      "Transitions": {
+        "NextAction": "play-success",
+        "Errors": [
+          {
+            "NextAction": "play-error",
+            "ErrorType": "NoMatchingError"
+          }
+        ]
+      }
+    },
+    {
+      "Identifier": "play-success",
+      "Type": "MessageParticipant",
+      "Parameters": {
+        "Text": "Your claim has been submitted successfully. A claims specialist will review your case. Goodbye."
+      },
+      "Transitions": {
+        "NextAction": "disconnect"
+      }
+    },
+    {
+      "Identifier": "play-error",
+      "Type": "MessageParticipant",
+      "Parameters": {
+        "Text": "We encountered an issue processing your claim. Please try again later. Goodbye."
+      },
+      "Transitions": {
+        "NextAction": "disconnect"
+      }
+    },
+    {
+      "Identifier": "disconnect",
+      "Type": "DisconnectParticipant",
+      "Parameters": {},
+      "Transitions": {}
+    }
+  ]
+}

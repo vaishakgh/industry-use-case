@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ClaimDetail } from './ClaimDetail';
+import { ReportClaim } from './ReportClaim';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/';
 
@@ -18,6 +19,7 @@ interface ClaimsDashboardProps {
 export function ClaimsDashboard({ onSessionTimeout, token }: ClaimsDashboardProps) {
   const [claims, setClaims] = useState<Claim[]>([]);
   const [selectedClaimId, setSelectedClaimId] = useState<string | null>(null);
+  const [showReportForm, setShowReportForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,6 +32,23 @@ export function ClaimsDashboard({ onSessionTimeout, token }: ClaimsDashboardProp
     return 'status-default';
   };
 
+  const returnToClaimsList = useCallback(() => {
+    setSelectedClaimId(null);
+    setShowReportForm(false);
+    setLoading(true);
+    fetchClaims();
+  }, []);
+
+  // Listen for browser back button (popstate) to return to claims list
+  useEffect(() => {
+    const handlePopState = () => {
+      returnToClaimsList();
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [returnToClaimsList]);
+
+  // Fetch claims on initial mount
   useEffect(() => {
     fetchClaims();
   }, []);
@@ -59,11 +78,28 @@ export function ClaimsDashboard({ onSessionTimeout, token }: ClaimsDashboardProp
     }
   };
 
+  if (showReportForm) {
+    return (
+      <ReportClaim
+        onBack={() => history.back()}
+        onSuccess={() => {
+          // Replace current history entry so back doesn't return to report form
+          history.replaceState(null, '', '');
+          setShowReportForm(false);
+          setLoading(true);
+          // Wait a moment for the async Lambda to create the claim, then refresh
+          setTimeout(() => fetchClaims(), 2000);
+        }}
+        token={token}
+      />
+    );
+  }
+
   if (selectedClaimId) {
     return (
       <ClaimDetail
         claimId={selectedClaimId}
-        onBack={() => setSelectedClaimId(null)}
+        onBack={() => history.back()}
         onSessionTimeout={onSessionTimeout}
         token={token}
       />
@@ -73,8 +109,16 @@ export function ClaimsDashboard({ onSessionTimeout, token }: ClaimsDashboardProp
   return (
     <div className="claims-dashboard" aria-label="Claims Dashboard">
       <div className="dashboard-header">
-        <h1>My Claims</h1>
-        <p className="dashboard-subtitle">View and manage your insurance claims</p>
+        <div>
+          <h1>My Claims</h1>
+          <p className="dashboard-subtitle">View and manage your insurance claims</p>
+        </div>
+        <button className="report-claim-btn" onClick={() => {
+          history.pushState({ view: 'report' }, '', '');
+          setShowReportForm(true);
+        }}>
+          + Report New Claim
+        </button>
       </div>
       {loading && <div className="loading-spinner">Loading claims...</div>}
       {error && <p className="dashboard-error" role="alert">{error}</p>}
@@ -94,7 +138,10 @@ export function ClaimsDashboard({ onSessionTimeout, token }: ClaimsDashboardProp
             <button
               key={claim.claimId}
               className="claim-card"
-              onClick={() => setSelectedClaimId(claim.claimId)}
+              onClick={() => {
+                history.pushState({ view: 'detail', claimId: claim.claimId }, '', '');
+                setSelectedClaimId(claim.claimId);
+              }}
             >
               <div className="claim-card-header">
                 <span className="claim-id">{claim.claimId}</span>
