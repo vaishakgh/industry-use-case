@@ -3151,19 +3151,22 @@
                                     {
                                       "Action": [
                                         "kms:Decrypt",
-                                        "kms:DescribeKey"
+                                        "kms:DescribeKey",
+                                        "kms:Encrypt",
+                                        "kms:GenerateDataKey*",
+                                        "kms:ReEncrypt*"
                                       ],
                                       "Effect": "Allow",
                                       "Resource": [
                                         {
                                           "Fn::GetAtt": [
-                                            "EncryptionAuditKey24434AF8",
+                                            "EncryptionClaimsKeyB0F01EFE",
                                             "Arn"
                                           ]
                                         },
                                         {
                                           "Fn::GetAtt": [
-                                            "EncryptionClaimsKeyB0F01EFE",
+                                            "EncryptionDocumentsKey828B3A4F",
                                             "Arn"
                                           ]
                                         }
@@ -3172,22 +3175,20 @@
                                     {
                                       "Action": [
                                         "dynamodb:BatchGetItem",
+                                        "dynamodb:BatchWriteItem",
                                         "dynamodb:ConditionCheckItem",
+                                        "dynamodb:DeleteItem",
                                         "dynamodb:DescribeTable",
                                         "dynamodb:GetItem",
                                         "dynamodb:GetRecords",
                                         "dynamodb:GetShardIterator",
+                                        "dynamodb:PutItem",
                                         "dynamodb:Query",
-                                        "dynamodb:Scan"
+                                        "dynamodb:Scan",
+                                        "dynamodb:UpdateItem"
                                       ],
                                       "Effect": "Allow",
                                       "Resource": [
-                                        {
-                                          "Fn::GetAtt": [
-                                            "DatabaseAuditLogTable81583F1A",
-                                            "Arn"
-                                          ]
-                                        },
                                         {
                                           "Fn::GetAtt": [
                                             "DatabaseClaimsTableDE5ED1CC",
@@ -3195,17 +3196,9 @@
                                           ]
                                         },
                                         {
-                                          "Fn::Join": [
-                                            "",
-                                            [
-                                              {
-                                                "Fn::GetAtt": [
-                                                  "DatabaseAuditLogTable81583F1A",
-                                                  "Arn"
-                                                ]
-                                              },
-                                              "/index/*"
-                                            ]
+                                          "Fn::GetAtt": [
+                                            "DatabaseLoginAttemptsTableBD3C77B7",
+                                            "Arn"
                                           ]
                                         },
                                         {
@@ -3253,15 +3246,12 @@
                                     {
                                       "Action": [
                                         "kms:Decrypt",
-                                        "kms:DescribeKey",
-                                        "kms:Encrypt",
-                                        "kms:GenerateDataKey*",
-                                        "kms:ReEncrypt*"
+                                        "kms:DescribeKey"
                                       ],
                                       "Effect": "Allow",
                                       "Resource": {
                                         "Fn::GetAtt": [
-                                          "EncryptionDocumentsKey828B3A4F",
+                                          "EncryptionAuditKey24434AF8",
                                           "Arn"
                                         ]
                                       }
@@ -3269,28 +3259,35 @@
                                     {
                                       "Action": [
                                         "dynamodb:BatchGetItem",
-                                        "dynamodb:BatchWriteItem",
                                         "dynamodb:ConditionCheckItem",
-                                        "dynamodb:DeleteItem",
                                         "dynamodb:DescribeTable",
                                         "dynamodb:GetItem",
                                         "dynamodb:GetRecords",
                                         "dynamodb:GetShardIterator",
-                                        "dynamodb:PutItem",
                                         "dynamodb:Query",
-                                        "dynamodb:Scan",
-                                        "dynamodb:UpdateItem"
+                                        "dynamodb:Scan"
                                       ],
                                       "Effect": "Allow",
                                       "Resource": [
                                         {
                                           "Fn::GetAtt": [
-                                            "DatabaseLoginAttemptsTableBD3C77B7",
+                                            "DatabaseAuditLogTable81583F1A",
                                             "Arn"
                                           ]
                                         },
                                         {
-                                          "Ref": "AWS::NoValue"
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "DatabaseAuditLogTable81583F1A",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/index/*"
+                                            ]
+                                          ]
                                         }
                                       ]
                                     }
@@ -3356,7 +3353,7 @@
                       "aws:cdk:cloudformation:props": {
                         "code": {
                           "s3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-                          "s3Key": "0076313ee4aa0f96557dd8c26e5170248459bc5fa12a52037cdf869c65a3a7b2.zip"
+                          "s3Key": "5d6f5e7ff544b6a37c9d7aa9a2cd052fc14b7835f98e31ef523a9b8cbb5f316a.zip"
                         },
                         "environment": {
                           "variables": {
@@ -3559,7 +3556,7 @@
                       "aws:cdk:cloudformation:props": {
                         "code": {
                           "s3Bucket": "cdk-hnb659fds-assets-618257308782-eu-central-1",
-                          "s3Key": "0076313ee4aa0f96557dd8c26e5170248459bc5fa12a52037cdf869c65a3a7b2.zip"
+                          "s3Key": "5d6f5e7ff544b6a37c9d7aa9a2cd052fc14b7835f98e31ef523a9b8cbb5f316a.zip"
                         },
                         "environment": {
                           "variables": {
