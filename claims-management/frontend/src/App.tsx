@@ -7,8 +7,10 @@ export type AppView = 'login' | 'dashboard';
 export function App() {
   const [view, setView] = useState<AppView>('login');
   const [sessionExpired, setSessionExpired] = useState(false);
+  const [token, setToken] = useState<string>('');
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (idToken: string) => {
+    setToken(idToken);
     setView('dashboard');
     setSessionExpired(false);
   };
@@ -18,8 +20,20 @@ export function App() {
     setView('login');
   };
 
+  const handleLogout = () => {
+    setToken('');
+    setView('login');
+    setSessionExpired(false);
+  };
+
   return (
     <main>
+      {view !== 'login' && (
+        <nav className="top-nav">
+          <span className="nav-brand">Claims FNOL Portal</span>
+          <button className="logout-btn" onClick={handleLogout}>Logout</button>
+        </nav>
+      )}
       {view === 'login' && (
         <LoginScreen
           onSuccess={handleLoginSuccess}
@@ -27,7 +41,7 @@ export function App() {
         />
       )}
       {view === 'dashboard' && (
-        <ClaimsDashboard onSessionTimeout={handleSessionTimeout} />
+        <ClaimsDashboard onSessionTimeout={handleSessionTimeout} token={token} />
       )}
     </main>
   );

@@ -8,6 +8,7 @@ const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 interface DocumentUploadProps {
   claimId: string;
   onSessionTimeout: () => void;
+  token: string;
 }
 
 /**
@@ -19,7 +20,7 @@ interface DocumentUploadProps {
  *
  * _Requirements: 10.2, 10.3, 10.4_
  */
-export function DocumentUpload({ claimId, onSessionTimeout }: DocumentUploadProps) {
+export function DocumentUpload({ claimId, onSessionTimeout, token }: DocumentUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -66,12 +67,13 @@ export function DocumentUpload({ claimId, onSessionTimeout }: DocumentUploadProp
     setResult(null);
 
     try {
-      const formData = new FormData();
-      formData.append('document', file);
+      const API_URL = import.meta.env.VITE_API_URL || '/api/';
 
-      const response = await fetch(`/api/claims/${claimId}/documents`, {
+      // Step 1: Get pre-signed upload URL from the API
+      const response = await fetch(`${API_URL}claims/${claimId}/documents`, {
         method: 'POST',
-        body: formData,
+        headers: { Authorization: token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: file.name, sizeBytes: file.size, contentType: file.type }),
       });
 
       if (response.status === 401) {
@@ -80,10 +82,24 @@ export function DocumentUpload({ claimId, onSessionTimeout }: DocumentUploadProp
       }
 
       const data = await response.json();
-      setResult({
-        success: response.ok,
-        message: data.message ?? (response.ok ? 'Document uploaded successfully.' : 'Upload failed.'),
+
+      if (!response.ok) {
+        setResult({ success: false, message: data.message || 'Upload failed.' });
+        return;
+      }
+
+      // Step 2: Upload the file directly to S3 using the pre-signed URL
+      const uploadResponse = await fetch(data.uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type || 'application/octet-stream' },
+        body: file,
       });
+
+      if (uploadResponse.ok) {
+        setResult({ success: true, message: 'Document uploaded successfully to S3.' });
+      } else {
+        setResult({ success: false, message: 'S3 upload failed. Please try again.' });
+      }
     } catch {
       setResult({ success: false, message: 'Upload failed. Please try again.' });
     } finally {

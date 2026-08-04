@@ -6,6 +6,7 @@ const MAX_DISPUTE_REASON_LENGTH = 2000;
 interface DisputeFormProps {
   claimId: string;
   onSessionTimeout: () => void;
+  token: string;
 }
 
 /**
@@ -16,7 +17,7 @@ interface DisputeFormProps {
  *
  * _Requirements: 11.1, 11.4, 11.5_
  */
-export function DisputeForm({ claimId, onSessionTimeout }: DisputeFormProps) {
+export function DisputeForm({ claimId, onSessionTimeout, token }: DisputeFormProps) {
   const [reason, setReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -46,9 +47,10 @@ export function DisputeForm({ claimId, onSessionTimeout }: DisputeFormProps) {
     setSubmitting(true);
 
     try {
-      const response = await fetch(`/api/claims/${claimId}/disputes`, {
+      const API_URL = import.meta.env.VITE_API_URL || '/api/';
+      const response = await fetch(`${API_URL}claims/${claimId}/disputes`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { Authorization: token, 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: trimmed }),
       });
 
