@@ -6,7 +6,7 @@ This workspace documents and executes a **greenfield build of a Claims Managemen
 
 The system lets customers report a claim through voice, email, or chat, with an AI intake agent extracting structured data and preserving conversation context across channels. Uploaded damage photos are analyzed automatically to estimate severity and repair cost, enabling straight-through processing for low-risk claims while routing complex or high-value claims to human adjusters. Claims move through a defined lifecycle — intake, assessment, fraud screening, and payout or dispute — orchestrated as a state machine with retry and escalation handling. Every automated decision is logged, with its inputs and confidence score, to an append-only audit trail before it is allowed to take effect.
 
-**Scope:** 12 requirements · 43 correctness properties · 5 subsystems · 7 backend packages · 108 implementation/test sub-tasks · 1 frontend package (planned)
+**Scope:** 12 requirements · 43 correctness properties · 5 subsystems · 7 backend packages · 141 implementation tasks · 1 frontend package · CDK infrastructure · 18 integration tests
 
 **Target stack:** Bedrock AgentCore, Amazon Transcribe, Amazon Rekognition, AWS Step Functions, Lambda, DynamoDB, S3, Amplify, Cognito — implemented as TypeScript/Node.js Lambda services in an npm-workspaces monorepo.
 
@@ -137,7 +137,7 @@ flowchart LR
 | **Damage Assessment Service** | [`backend/services/damage-assessment/`](./backend/services/damage-assessment/) | Amazon Rekognition-based photo analysis — severity rating, estimated repair cost, confidence score |
 | **Fraud Detection Service** | [`backend/services/fraud-detection/`](./backend/services/fraud-detection/) | Claim frequency, timeline consistency, and sanctions/watchlist screening; fraud flag aggregation |
 | **Claims Orchestrator** | [`backend/services/orchestrator/`](./backend/services/orchestrator/) | AWS Step Functions state machine driving the claim lifecycle (Intake → Assessment → Fraud_Check → Payout/Disputed) with retry/backoff and escalation |
-| **Customer Portal** | [`backend/services/portal/`](./backend/services/portal/) | Amplify + Cognito self-service web application — status tracking, document upload, dispute submission; frontend (React SPA) scaffolding planned in tasks.md section 18 |
+| **Customer Portal** | [`backend/services/portal/`](./backend/services/portal/) | Cognito-authenticated self-service web application — status tracking, document upload, dispute submission |
 
 Two cross-cutting packages support all five: [`backend/services/audit-log/`](./backend/services/audit-log/) (append-only decision audit trail, written *before* any automated decision takes effect) and [`backend/services/shared/`](./backend/services/shared/) (domain types, configuration loader, shared upload validator).
 
@@ -183,7 +183,7 @@ sequenceDiagram
         Note over Human,Docs: Phase 3 — Tasks
         Human->>Kiro: Proceed to tasks
         Kiro->>TaskAgent: Generate tasks.md
-        TaskAgent->>Docs: 97 sub-tasks, dependency graph (26 waves)
+        TaskAgent->>Docs: 141 sub-tasks, dependency graph (35 waves)
         Docs-->>Human: Gate: Task plan reviewed
     end
 
@@ -244,6 +244,8 @@ claims-management/
 | Infrastructure | [`infra/`](./infra/) | AWS CDK v2 stack (DynamoDB, S3, Cognito, Lambda, Step Functions, API Gateway, KMS, CloudWatch) |
 | Postman Collection | [`postman/Claims-Management-API.postman_collection.json`](./postman/Claims-Management-API.postman_collection.json) | API endpoints + Step Functions test scenarios |
 | Integration Tests | [`tests/integration/`](./tests/integration/) | 18 integration test suites validating the deployed stack |
+| Project Status | [`output/project-status/project-status.md`](./output/project-status/project-status.md) | Overall project status, task completion, deployment target |
+| Session Log | [`output/session-log/session-log.md`](./output/session-log/session-log.md) | Detailed session log of the spec-driven development process |
 
 ---
 
@@ -251,11 +253,9 @@ claims-management/
 
 | Document | Description |
 |---|---|
-| [`output/project-status/project-status.md`](./output/project-status/project-status.md) | Overall project status, task completion, deployment target |
-| [`output/session-log/session-log.md`](./output/session-log/session-log.md) | Detailed session log of the spec-driven development process |
-| [`output/fnol-intake-agent/fnol-intake-agent-scenarios.md`](./output/fnol-intake-agent/fnol-intake-agent-scenarios.md) | 5 FNOL Intake Agent channel scenarios (Chat, Email, Voice) with end-to-end lifecycle, state machine diagram, and audit log results |
 | [`output/channels/channels-testing.md`](./output/channels/channels-testing.md) | Chat and Voice channel end-to-end testing with Amazon Connect integration |
 | [`output/frontend-portal/frontend-portal.md`](./output/frontend-portal/frontend-portal.md) | Customer Portal frontend — login, claims dashboard, claim detail, document upload, dispute submission, DynamoDB state, and S3 documents |
+| [`output/fnol-intake-agent/fnol-intake-agent-scenarios.md`](./output/fnol-intake-agent/fnol-intake-agent-scenarios.md) | 5 FNOL Intake Agent channel scenarios (Chat, Email, Voice) with end-to-end lifecycle, state machine diagram, and audit log results |
 
 ---
 

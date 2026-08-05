@@ -106,5 +106,23 @@ A toll-free UK phone number (`+44 808 281 8871`) claimed on Amazon Connect's Cha
 |---|---|---|---|
 | Chat | Frontend "Report New Claim" button | Portal API → Intake Lambda → DynamoDB → Step Functions | Claim processed end-to-end |
 | Voice | Phone call to claims hotline | Amazon Connect → Intake Lambda → DynamoDB → Step Functions | Claim processed end-to-end |
+| Email | Inbound email (SES) | SES receipt rule → Intake Lambda → DynamoDB → Step Functions | Infrastructure ready, validated via Lambda invocation |
 
-Both channels produce identical results in DynamoDB — the only difference is the `originalChannel` field (`Chat` vs `Voice`) and how the customer interacts with the system.
+---
+
+## Email Channel — Status
+
+The Email channel infrastructure is fully deployed:
+
+- ✅ SES identity verified: `vaishak.shaji@capgemini.com`
+- ✅ SES receipt rule configured (CDK): triggers `claims-intake-agent-dev` Lambda
+- ✅ Lambda handles Email channel input (validated via FNOL Intake Agent scenarios 2 and 5)
+- ⚠️ Inbound email reception requires domain MX record configuration (production step)
+
+**Verified Identities:**
+```
+claims-fnol.email.connect.aws
+vaishak.shaji@capgemini.com
+```
+
+In production, a domain (e.g., `claims@fnol.example.com`) would have MX records pointing to SES, enabling customers to email claims directly. The Lambda processes the email body, extracts claim fields, and triggers the lifecycle — identical to the Chat and Voice flows.
